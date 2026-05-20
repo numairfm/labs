@@ -1,0 +1,9 @@
+{
+  "name": "Wave Editor",
+  "description": "A high-accuracy physics Wave game mode and visual level editor.",
+  "category": "Games",
+  "icon": "triangle",
+  "tags": ["game", "wave", "editor", "geometry"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave Editor - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'dark'; // Force dark mode for games typically
+      try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="game-body">
+  <header class="header absolute-header">
+    <a href="/" class="btn-icon header-btn" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em; margin: 0; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">WAVE EDITOR</h1>
+    <button id="theme-btn" class="btn-icon header-btn" aria-label="Toggle Theme">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="game-container">
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- Floating Editor UI -->
+    <div id="editor-ui" class="editor-panel glass-panel">
+      <div class="editor-header">
+        <button id="btn-toggle-mode" class="action-btn primary w-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          PLAY LEVEL
+        </button>
+      </div>
+      
+      <div class="tools-section">
+        <div class="tool-grid">
+          <button class="tool-btn active" data-tool="block" title="Solid Block">
+            <div class="icon-block"></div>
+          </button>
+          <button class="tool-btn" data-tool="spike-up" title="Spike (Up)">
+            <div class="icon-spike up"></div>
+          </button>
+          <button class="tool-btn" data-tool="spike-down" title="Spike (Down)">
+            <div class="icon-spike down"></div>
+          </button>
+          <button class="tool-btn" data-tool="spike-left" title="Spike (Left)">
+            <div class="icon-spike left"></div>
+          </button>
+          <button class="tool-btn" data-tool="spike-right" title="Spike (Right)">
+            <div class="icon-spike right"></div>
+          </button>
+          <button class="tool-btn" data-tool="eraser" title="Eraser">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16C2.5 15.5 2.5 14.5 3 14L13 4C13.5 3.5 14.5 3.5 15 4L20 9C20.5 9.5 20.5 10.5 20 11L11 20"></path><line x1="10" y1="11" x2="15" y2="16"></line></svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="data-section">
+        <button id="btn-export" class="action-btn outline w-full text-sm">Export JSON</button>
+        <button id="btn-import" class="action-btn outline w-full text-sm">Import JSON</button>
+        <input type="file" id="file-import" accept=".json" style="display: none;">
+      </div>
+    </div>
+    
+    <!-- Crash Overlay -->
+    <div id="crash-overlay" class="overlay" style="display: none;">
+      <h2 class="crash-text">CRASHED</h2>
+      <p class="crash-subtext">Click or Space to restart</p>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
