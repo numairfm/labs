@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ox > px + 100 || ox + GRID_SIZE * 3 < px - 100) continue;
 
       if (obj.type === 'portal-normal' || obj.type === 'portal-mini') {
-        const pRect = { left: ox + 14, right: ox + 26, top: oy, bottom: oy + GRID_SIZE };
+        const pRect = { left: ox + 14, right: ox + 26, top: oy, bottom: oy + GRID_SIZE * 3 };
         if (pBox.left < pRect.right && pBox.right > pRect.left && pBox.top < pRect.bottom && pBox.bottom > pRect.top) {
           if (obj.type === 'portal-normal') player.isMini = false;
           if (obj.type === 'portal-mini') player.isMini = true;
@@ -439,7 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeStyle = obj.type === 'portal-mini' ? '#c084fc' : '#4ade80';
         ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.ellipse(screenX + GRID_SIZE/2, screenY + GRID_SIZE/2, 12, GRID_SIZE/2, 0, 0, Math.PI * 2);
+        // Ellipse for a 3-tile high portal
+        ctx.ellipse(screenX + GRID_SIZE/2, screenY + (GRID_SIZE * 1.5), 12, GRID_SIZE * 1.5, 0, 0, Math.PI * 2);
         ctx.stroke();
       }
     }
