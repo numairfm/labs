@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const pads = document.querySelectorAll('.drum-pad');
+  const pads = document.querySelectorAll('.drum-item');
   const masterVolSlider = document.getElementById('master-vol');
 
   let audioCtx = null;
@@ -247,31 +247,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Trigger kinetic strike animation with immediate restart reflow
+  function animateStrike(el) {
+    if (!el) return;
+    el.classList.remove('active');
+    void el.offsetWidth; // Force CSS repaint reflow
+    el.classList.add('active');
+  }
+
   // Connect clicks
   pads.forEach(pad => {
-    pad.addEventListener('click', () => {
+    pad.addEventListener('click', (e) => {
+      e.preventDefault();
       const sound = pad.dataset.sound;
       triggerPad(sound);
-      pad.classList.add('active');
-      setTimeout(() => pad.classList.remove('active'), 80);
+      animateStrike(pad);
+    });
+
+    // Cleanup active class when kinetic animation runs to completion
+    pad.addEventListener('animationend', () => {
+      pad.classList.remove('active');
     });
   });
 
-  // Keyboard mapping
+  // Keyboard mapping (QWER and ASDF)
   const keyMap = {
     'q': 'kick', 'w': 'snare', 'e': 'hihat', 'r': 'clap',
     'a': 'tom', 's': 'pluck', 'd': 'sub', 'f': 'noise'
   };
 
   window.addEventListener('keydown', (e) => {
-    const char = e.key.toLowerCase();
-    if (keyMap[char]) {
-      const sound = keyMap[char];
-      const pad = document.querySelector(`.drum-pad[data-sound="${sound}"]`);
+    const key = e.key.toLowerCase();
+    if (keyMap[key]) {
+      e.preventDefault();
+      const sound = keyMap[key];
+      const pad = document.querySelector(`.drum-item[data-sound="${sound}"]`);
       if (pad) {
         triggerPad(sound);
-        pad.classList.add('active');
-        setTimeout(() => pad.classList.remove('active'), 80);
+        animateStrike(pad);
       }
     }
   });

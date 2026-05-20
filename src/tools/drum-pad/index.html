@@ -41,39 +41,189 @@
         </div>
       </div>
 
-      <div class="pad-grid">
-        <button class="drum-pad" data-sound="kick" data-key="Q">
-          <span class="pad-key">Q</span>
-          <span class="pad-name">KICK</span>
-        </button>
-        <button class="drum-pad" data-sound="snare" data-key="W">
-          <span class="pad-key">W</span>
-          <span class="pad-name">SNARE</span>
-        </button>
-        <button class="drum-pad" data-sound="hihat" data-key="E">
-          <span class="pad-key">E</span>
-          <span class="pad-name">HI-HAT</span>
-        </button>
-        <button class="drum-pad" data-sound="clap" data-key="R">
-          <span class="pad-key">R</span>
-          <span class="pad-name">CLAP</span>
-        </button>
-        <button class="drum-pad" data-sound="tom" data-key="A">
-          <span class="pad-key">A</span>
-          <span class="pad-name">TOM</span>
-        </button>
-        <button class="drum-pad" data-sound="pluck" data-key="S">
-          <span class="pad-key">S</span>
-          <span class="pad-name">PLUCK</span>
-        </button>
-        <button class="drum-pad" data-sound="sub" data-key="D">
-          <span class="pad-key">D</span>
-          <span class="pad-name">SUB KICK</span>
-        </button>
-        <button class="drum-pad" data-sound="noise" data-key="F">
-          <span class="pad-key">F</span>
-          <span class="pad-name">CRASH</span>
-        </button>
+      <div class="drum-kit-stage">
+        <!-- 1. Crash Cymbal -->
+        <div class="drum-item crash-cymbal" data-sound="noise" data-key="F">
+          <span class="drum-badge"><kbd>F</kbd> CRASH</span>
+          <svg class="drum-graphic" viewBox="0 0 160 160">
+            <line x1="80" y1="80" x2="80" y2="160" stroke="#888" stroke-width="4"></line>
+            <ellipse cx="80" cy="80" rx="70" ry="25" fill="url(#gold-radial)"></ellipse>
+            <ellipse cx="80" cy="80" rx="55" ry="18" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"></ellipse>
+            <ellipse cx="80" cy="80" rx="35" ry="10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"></ellipse>
+            <path d="M70,80 C70,72 90,72 90,80 Z" fill="url(#gold-dark)"></path>
+            <ellipse cx="80" cy="78" rx="4" ry="2.5" fill="#333"></ellipse>
+            <rect x="78" y="72" width="4" height="4" fill="#666"></rect>
+          </svg>
+        </div>
+
+        <!-- 2. Ride Cymbal -->
+        <div class="drum-item ride-cymbal" data-sound="pluck" data-key="S">
+          <span class="drum-badge"><kbd>S</kbd> RIDE</span>
+          <svg class="drum-graphic" viewBox="0 0 180 180">
+            <line x1="90" y1="90" x2="90" y2="180" stroke="#888" stroke-width="4"></line>
+            <ellipse cx="90" cy="90" rx="80" ry="28" fill="url(#gold-radial-ride)"></ellipse>
+            <ellipse cx="90" cy="90" rx="60" ry="20" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></ellipse>
+            <ellipse cx="90" cy="90" rx="38" ry="12" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"></ellipse>
+            <path d="M78,90 C78,80 102,80 102,90 Z" fill="url(#gold-dark)"></path>
+            <ellipse cx="90" cy="88" rx="5" ry="3" fill="#333"></ellipse>
+            <rect x="88" y="82" width="4" height="4" fill="#666"></rect>
+          </svg>
+        </div>
+
+        <!-- 3. Hi-Hat -->
+        <div class="drum-item hihat" data-sound="hihat" data-key="E">
+          <span class="drum-badge"><kbd>E</kbd> HI-HAT</span>
+          <svg class="drum-graphic" viewBox="0 0 140 200">
+            <line x1="70" y1="50" x2="70" y2="200" stroke="#888" stroke-width="4"></line>
+            <ellipse cx="70" cy="62" rx="55" ry="18" fill="url(#gold-radial-hat-bottom)"></ellipse>
+            <g class="hihat-top-group">
+              <ellipse cx="70" cy="54" rx="54" ry="17" fill="url(#gold-radial-hat-top)"></ellipse>
+              <ellipse cx="70" cy="54" rx="35" ry="10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"></ellipse>
+              <path d="M60,54 C60,48 80,48 80,54 Z" fill="url(#gold-dark)"></path>
+              <rect x="67" y="38" width="6" height="10" fill="#666"></rect>
+              <rect x="64" y="42" width="12" height="3" fill="#888"></rect>
+            </g>
+            <polygon points="62,185 78,185 74,200 66,200" fill="#444" stroke="#888" stroke-width="2"></polygon>
+          </svg>
+        </div>
+
+        <!-- 4. Snare Drum -->
+        <div class="drum-item snare-drum" data-sound="snare" data-key="W">
+          <span class="drum-badge"><kbd>W</kbd> SNARE</span>
+          <svg class="drum-graphic" viewBox="0 0 150 150">
+            <path d="M50,130 L75,100 L100,130" stroke="#777" stroke-width="3" fill="none"></path>
+            <line x1="75" y1="75" x2="75" y2="105" stroke="#777" stroke-width="4"></line>
+            <path d="M22,70 L22,95 C22,108 128,108 128,95 L128,70 Z" fill="url(#snare-shell)" stroke="var(--border-color)" stroke-width="2"></path>
+            <rect x="71" y="78" width="8" height="15" fill="#aaa" stroke="#333" stroke-width="1"></rect>
+            <ellipse cx="75" cy="70" rx="53" ry="18" fill="url(#drum-head-white)" stroke="#888" stroke-width="3"></ellipse>
+            <ellipse cx="75" cy="70" rx="50" ry="16" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="2"></ellipse>
+          </svg>
+        </div>
+
+        <!-- 5. High Tom -->
+        <div class="drum-item rack-tom" data-sound="tom" data-key="A">
+          <span class="drum-badge"><kbd>A</kbd> TOM</span>
+          <svg class="drum-graphic" viewBox="0 0 130 130">
+            <path d="M20,55 L20,78 C20,89 110,89 110,78 L110,55 Z" fill="url(#tom-shell)" stroke="var(--border-color)" stroke-width="2"></path>
+            <ellipse cx="65" cy="55" rx="45" ry="15" fill="url(#drum-head-white)" stroke="#888" stroke-width="3"></ellipse>
+            <ellipse cx="65" cy="55" rx="42" ry="13" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1.5"></ellipse>
+          </svg>
+        </div>
+
+        <!-- 6. Floor Tom -->
+        <div class="drum-item floor-tom" data-sound="sub" data-key="D">
+          <span class="drum-badge"><kbd>D</kbd> FLOOR TOM</span>
+          <svg class="drum-graphic" viewBox="0 0 170 200">
+            <line x1="25" y1="120" x2="10" y2="195" stroke="#777" stroke-width="3"></line>
+            <line x1="145" y1="120" x2="160" y2="195" stroke="#777" stroke-width="3"></line>
+            <line x1="85" y1="130" x2="85" y2="198" stroke="#555" stroke-width="2.5"></line>
+            <path d="M22,80 L22,145 C22,165 148,165 148,145 L148,80 Z" fill="url(#tom-shell)" stroke="var(--border-color)" stroke-width="2.5"></path>
+            <ellipse cx="85" cy="80" rx="63" ry="21" fill="url(#drum-head-white)" stroke="#888" stroke-width="3.5"></ellipse>
+            <ellipse cx="85" cy="80" rx="59" ry="18" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="2"></ellipse>
+          </svg>
+        </div>
+
+        <!-- 7. Bass Drum (Kick) -->
+        <div class="drum-item bass-drum" data-sound="kick" data-key="Q">
+          <span class="drum-badge"><kbd>Q</kbd> BASS DRUM</span>
+          <svg class="drum-graphic" viewBox="0 0 200 200">
+            <line x1="25" y1="135" x2="5" y2="185" stroke="#777" stroke-width="5" stroke-linecap="round"></line>
+            <line x1="175" y1="135" x2="195" y2="185" stroke="#777" stroke-width="5" stroke-linecap="round"></line>
+            <circle cx="100" cy="110" r="80" fill="url(#bass-hoop)" stroke="#333" stroke-width="3"></circle>
+            <circle cx="100" cy="110" r="74" fill="url(#bass-head)"></circle>
+            <text x="100" y="102" text-anchor="middle" font-family="var(--font-sans)" font-weight="900" font-size="12" fill="var(--text-secondary)" letter-spacing="0.1em">JUKEBOX</text>
+            <text x="100" y="118" text-anchor="middle" font-family="var(--font-sans)" font-weight="700" font-size="8" fill="var(--text-secondary)" opacity="0.6" letter-spacing="0.2em">PERCUSSION</text>
+            <g class="pedal-group">
+              <rect x="94" y="168" width="12" height="32" fill="#333" rx="2" stroke="#555" stroke-width="1.5"></rect>
+              <line x1="100" y1="170" x2="100" y2="152" stroke="#777" stroke-width="3"></line>
+              <circle cx="100" cy="150" r="6" fill="#444" stroke="#888" stroke-width="1"></circle>
+            </g>
+          </svg>
+        </div>
+
+        <!-- 8. Cowbell -->
+        <div class="drum-item cowbell" data-sound="clap" data-key="R">
+          <span class="drum-badge"><kbd>R</kbd> COWBELL</span>
+          <svg class="drum-graphic" viewBox="0 0 100 100">
+            <line x1="50" y1="15" x2="50" y2="60" stroke="#777" stroke-width="3"></line>
+            <polygon points="38,30 62,30 68,80 32,80" fill="url(#cowbell-grad)" stroke="#333" stroke-width="2"></polygon>
+            <ellipse cx="50" cy="80" rx="18" ry="4" fill="#222" stroke="rgba(255,255,255,0.15)"></ellipse>
+            <rect x="44" y="24" width="12" height="6" fill="#888" rx="1"></rect>
+            <circle cx="50" cy="20" r="3" fill="#666"></circle>
+          </svg>
+        </div>
+
+        <!-- SVG Gradients Definition Block -->
+        <svg style="position: absolute; width: 0; height: 0;">
+          <defs>
+            <radialGradient id="gold-radial" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+              <stop offset="0%" stop-color="#ffe27a"></stop>
+              <stop offset="35%" stop-color="#ffd043"></stop>
+              <stop offset="70%" stop-color="#cc9a14"></stop>
+              <stop offset="95%" stop-color="#997000"></stop>
+              <stop offset="100%" stop-color="#664b00"></stop>
+            </radialGradient>
+            <radialGradient id="gold-radial-ride" cx="50%" cy="50%" r="50%" fx="40%" fy="40%">
+              <stop offset="0%" stop-color="#fff0ad"></stop>
+              <stop offset="30%" stop-color="#ffd55c"></stop>
+              <stop offset="65%" stop-color="#d19c0a"></stop>
+              <stop offset="90%" stop-color="#805d00"></stop>
+              <stop offset="100%" stop-color="#4d3800"></stop>
+            </radialGradient>
+            <radialGradient id="gold-radial-hat-top" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff1ba"></stop>
+              <stop offset="40%" stop-color="#ffd966"></stop>
+              <stop offset="75%" stop-color="#cc9c1f"></stop>
+              <stop offset="100%" stop-color="#7a5a0d"></stop>
+            </radialGradient>
+            <radialGradient id="gold-radial-hat-bottom" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffd966"></stop>
+              <stop offset="60%" stop-color="#b88a14"></stop>
+              <stop offset="100%" stop-color="#5c4305"></stop>
+            </radialGradient>
+            <linearGradient id="gold-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffd043"></stop>
+              <stop offset="100%" stop-color="#664b00"></stop>
+            </linearGradient>
+            <linearGradient id="snare-shell" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#445566"></stop>
+              <stop offset="25%" stop-color="#8899aa"></stop>
+              <stop offset="50%" stop-color="#ffffff"></stop>
+              <stop offset="75%" stop-color="#8899aa"></stop>
+              <stop offset="100%" stop-color="#445566"></stop>
+            </linearGradient>
+            <linearGradient id="tom-shell" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--accent-blue)"></stop>
+              <stop offset="30%" stop-color="hsl(230, 85%, 65%)"></stop>
+              <stop offset="50%" stop-color="#ffffff"></stop>
+              <stop offset="70%" stop-color="var(--accent-blue)"></stop>
+              <stop offset="100%" stop-color="hsl(230, 70%, 40%)"></stop>
+            </linearGradient>
+            <linearGradient id="bass-hoop" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1e293b"></stop>
+              <stop offset="50%" stop-color="var(--accent-blue)"></stop>
+              <stop offset="100%" stop-color="#0f172a"></stop>
+            </linearGradient>
+            <radialGradient id="drum-head-white" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff"></stop>
+              <stop offset="85%" stop-color="#f8fafc"></stop>
+              <stop offset="97%" stop-color="#e2e8f0"></stop>
+              <stop offset="100%" stop-color="#94a3b8"></stop>
+            </radialGradient>
+            <radialGradient id="bass-head" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#0f172a"></stop>
+              <stop offset="80%" stop-color="#1e293b"></stop>
+              <stop offset="100%" stop-color="#090d16"></stop>
+            </radialGradient>
+            <linearGradient id="cowbell-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3d2a1d"></stop>
+              <stop offset="40%" stop-color="#7c5335"></stop>
+              <stop offset="55%" stop-color="#9c6c49"></stop>
+              <stop offset="70%" stop-color="#7c5335"></stop>
+              <stop offset="100%" stop-color="#3d2a1d"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
     </div>
   </main>

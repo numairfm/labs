@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let masterGainNode = null;
   let activeOscillators = {}; // Maps note name to { osc, gain, triggerTime }
   let activeComputerKeys = new Set(); // To prevent key repeat triggers
-  let selectedWaveform = 'sine';
+  let selectedWaveform = 'piano';
 
   // DOM Controls
   const masterVolInput = document.getElementById('master-vol');
@@ -95,35 +95,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const now = audioCtx.currentTime;
 
-    // If already playing this note, stop it instantly
+    // If already playing this note, let it naturally decay in the background to avoid pops and overlap beautifully
     if (activeOscillators[note]) {
-      stopNote(note, true);
+      stopNote(note, false);
     }
 
-    const oscNode = audioCtx.createOscillator();
     const noteGainNode = audioCtx.createGain();
+    let oscs = [];
 
-    oscNode.type = selectedWaveform;
-    oscNode.frequency.setValueAtTime(freq, now);
+    if (selectedWaveform === 'piano') {
+      // High-Fidelity physical modeling of acoustic piano string
+      // Blend Triangle fundamental with lower-volume Sine harmonics for a rich timbre
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const osc3 = audioCtx.createOscillator();
 
-    // Get envelope settings
-    const attack = parseFloat(adsrAInput.value);
-    const decay = parseFloat(adsrDInput.value);
-    const sustain = parseFloat(adsrSInput.value);
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now);
 
-    // Note ADSR Attack & Decay scheduling
-    noteGainNode.gain.setValueAtTime(0, now);
-    noteGainNode.gain.linearRampToValueAtTime(1.0, now + attack);
-    noteGainNode.gain.setValueAtTime(1.0, now + attack);
-    noteGainNode.gain.exponentialRampToValueAtTime(Math.max(sustain, 0.001), now + attack + decay);
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, now);
 
-    oscNode.connect(noteGainNode);
+      osc3.type = 'sine';
+      osc3.frequency.setValueAtTime(freq * 3, now);
+
+      const osc1Gain = audioCtx.createGain();
+      const osc2Gain = audioCtx.createGain();
+      const osc3Gain = audioCtx.createGain();
+
+      osc1Gain.gain.setValueAtTime(0.6, now);
+      osc2Gain.gain.setValueAtTime(0.25, now);
+      osc3Gain.gain.setValueAtTime(0.15, now);
+
+      osc1.connect(osc1Gain);
+      osc2.connect(osc2Gain);
+      osc3.connect(osc3Gain);
+
+      osc1Gain.connect(noteGainNode);
+      osc2Gain.connect(noteGainNode);
+      osc3Gain.connect(noteGainNode);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc3.start(now);
+
+      oscs = [osc1, osc2, osc3];
+
+      // Piano String Envelope: Instant hammer strike (0.005s) followed by natural slow string decay over 3.5 seconds
+      noteGainNode.gain.setValueAtTime(0, now);
+      noteGainNode.gain.linearRampToValueAtTime(1.0, now + 0.005);
+      noteGainNode.gain.exponentialRampToValueAtTime(0.005, now + 3.5);
+    } else {
+      // Standard Synthesizer waveforms
+      const oscNode = audioCtx.createOscillator();
+      oscNode.type = selectedWaveform;
+      oscNode.frequency.setValueAtTime(freq, now);
+
+      // Get envelope settings
+      const attack = parseFloat(adsrAInput.value);
+      const decay = parseFloat(adsrDInput.value);
+      const sustain = parseFloat(adsrSInput.value);
+
+      // Standard synth ADSR Attack & Decay scheduling
+      noteGainNode.gain.setValueAtTime(0, now);
+      noteGainNode.gain.linearRampToValueAtTime(1.0, now + attack);
+      noteGainNode.gain.exponentialRampToValueAtTime(Math.max(sustain, 0.001), now + attack + decay);
+
+      oscNode.connect(noteGainNode);
+      oscNode.start(now);
+
+      oscs = [oscNode];
+    }
+
     noteGainNode.connect(masterGainNode);
 
-    oscNode.start(now);
-
     activeOscillators[note] = {
-      oscillator: oscNode,
+      oscillators: oscs,
       gainNode: noteGainNode,
       triggerTime: now
     };
@@ -138,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function stopNote(note, forceInstant = false) {
     if (!activeOscillators[note]) return;
 
-    const { oscillator, gainNode, triggerTime } = activeOscillators[note];
+    const { oscillators, gainNode, triggerTime } = activeOscillators[note];
     delete activeOscillators[note];
 
     // Remove active styles
@@ -152,12 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (forceInstant) {
       try {
-        oscillator.stop(now);
+        oscillators.forEach(osc => osc.stop(now));
       } catch (e) {}
       return;
     }
 
-    const release = parseFloat(adsrRInput.value);
+    const release = (selectedWaveform === 'piano') ? 0.25 : parseFloat(adsrRInput.value);
 
     // Cancel any scheduled decay envelopes
     gainNode.gain.cancelScheduledValues(now);
@@ -169,32 +216,73 @@ document.addEventListener('DOMContentLoaded', () => {
     gainNode.gain.exponentialRampToValueAtTime(0.0001, now + release);
 
     try {
-      oscillator.stop(now + release + 0.1);
+      oscillators.forEach(osc => osc.stop(now + release + 0.1));
     } catch (e) {}
   }
 
-  // Mouse & Touch bindings
+  // Unified Pointer Event Engine (Touch, Mouse, Pen)
+  let activePointerNotes = {}; // Tracks active notes per pointer ID
+
   keys.forEach(key => {
     const note = key.dataset.note;
 
-    const triggerPlay = (e) => {
-      e.preventDefault();
+    const play = () => {
       startNote(note);
     };
 
-    const triggerStop = (e) => {
-      e.preventDefault();
+    const stop = () => {
       stopNote(note);
     };
 
-    key.addEventListener('mousedown', triggerPlay);
-    key.addEventListener('mouseup', triggerStop);
-    key.addEventListener('mouseleave', triggerStop);
+    key.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      // Handle left click / touch primary triggers
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
 
-    // Touch Support
-    key.addEventListener('touchstart', triggerPlay, { passive: false });
-    key.addEventListener('touchend', triggerStop, { passive: false });
-    key.addEventListener('touchcancel', triggerStop, { passive: false });
+      if (!activePointerNotes[e.pointerId]) {
+        activePointerNotes[e.pointerId] = new Set();
+      }
+      activePointerNotes[e.pointerId].add(note);
+      play();
+    });
+
+    key.addEventListener('pointerenter', (e) => {
+      e.preventDefault();
+      // Support glissando sliding across keyboard keys with mouse left button pressed
+      if (e.pointerType === 'mouse' && e.buttons === 1) {
+        if (!activePointerNotes[e.pointerId]) {
+          activePointerNotes[e.pointerId] = new Set();
+        }
+        if (!activePointerNotes[e.pointerId].has(note)) {
+          activePointerNotes[e.pointerId].add(note);
+          play();
+        }
+      }
+    });
+
+    key.addEventListener('pointerleave', (e) => {
+      e.preventDefault();
+      if (activePointerNotes[e.pointerId] && activePointerNotes[e.pointerId].has(note)) {
+        activePointerNotes[e.pointerId].delete(note);
+        stop();
+      }
+    });
+
+    key.addEventListener('pointerup', (e) => {
+      e.preventDefault();
+      if (activePointerNotes[e.pointerId] && activePointerNotes[e.pointerId].has(note)) {
+        activePointerNotes[e.pointerId].delete(note);
+        stop();
+      }
+    });
+
+    key.addEventListener('pointercancel', (e) => {
+      e.preventDefault();
+      if (activePointerNotes[e.pointerId] && activePointerNotes[e.pointerId].has(note)) {
+        activePointerNotes[e.pointerId].delete(note);
+        stop();
+      }
+    });
   });
 
   // Computer Keyboard listeners

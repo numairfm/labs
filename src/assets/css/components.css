@@ -10,7 +10,6 @@
   transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), 
               box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1), 
               background-color 0.15s ease;
-  cursor: pointer;
   text-decoration: none;
   color: inherit;
   display: flex;
@@ -20,13 +19,17 @@
   overflow: hidden;
 }
 
-.card:hover {
+a.card, .card-interactive {
+  cursor: pointer;
+}
+
+a.card:hover, .card-interactive:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0px var(--border-color);
   background-color: var(--bg-secondary);
 }
 
-.card:active {
+a.card:active, .card-interactive:active {
   transform: translate(1px, 1px);
   box-shadow: 2px 2px 0px var(--border-color);
 }
