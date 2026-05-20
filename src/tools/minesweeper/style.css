@@ -171,6 +171,7 @@ body {
   background: var(--border-color);
   border: 2px solid var(--border-color);
   box-shadow: var(--shadow-main);
+  touch-action: manipulation;
 }
 
 /* Classic Win 3.1 beveled cell look, adapted for global theme colors */
@@ -190,6 +191,7 @@ body {
   font-family: var(--font-sans);
   cursor: pointer;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .cell:hover:not(.revealed):not(.flagged) {
@@ -263,3 +265,41 @@ body {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
+
+/* ── Mobile Mode Toggle Bar ── */
+.mobile-toggle-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.6rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.toggle-btn {
+  flex: 1;
+  max-width: 150px;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 2px 2px 0 var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.05s ease;
+}
+
+.toggle-btn.active {
+  background-color: var(--accent-blue);
+  color: white;
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+

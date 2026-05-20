@@ -29,6 +29,7 @@ let isGameOver = false;
 let timer = null;
 let seconds = 0;
 let revealedCount = 0;
+let mobileMode = 'dig'; // 'dig' or 'flag'
 
 function init() {
     initTheme();
@@ -49,6 +50,48 @@ function bindEvents() {
         msMessage.classList.remove('visible');
         startNewGame();
     });
+
+    // Mobile mode toggle listeners
+    const mobileToggleBar = document.getElementById('mobile-toggle-bar');
+    const toggleDigBtn = document.getElementById('toggle-dig-btn');
+    const toggleFlagBtn = document.getElementById('toggle-flag-btn');
+
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice && mobileToggleBar) {
+        mobileToggleBar.style.display = 'flex';
+    }
+
+    if (toggleDigBtn && toggleFlagBtn) {
+        toggleDigBtn.addEventListener('click', () => {
+            mobileMode = 'dig';
+            toggleDigBtn.classList.add('active');
+            toggleFlagBtn.classList.remove('active');
+        });
+        toggleFlagBtn.addEventListener('click', () => {
+            mobileMode = 'flag';
+            toggleFlagBtn.classList.add('active');
+            toggleDigBtn.classList.remove('active');
+        });
+    }
+
+    // Prevents double-tap zoom delay and zoom gestures on the grid element
+    if (gridElement) {
+        gridElement.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        let lastTap = 0;
+        gridElement.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                e.preventDefault();
+            }
+            lastTap = currentTime;
+        }, { passive: false });
+    }
 }
 
 function startNewGame() {
@@ -83,22 +126,73 @@ function createGrid() {
             cellElement.dataset.row = r;
             cellElement.dataset.col = c;
             
-            cellElement.addEventListener('click', () => handleCellClick(r, c));
             cellElement.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                handleCellRightClick(r, c);
             });
-            cellElement.addEventListener('mousedown', (e) => {
-                if (!isGameOver && e.button === 0 && !cellElement.classList.contains('revealed') && !cellElement.classList.contains('flagged')) {
+
+            let pressTimer = null;
+            let moved = false;
+
+            cellElement.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) {
+                    if (e.button === 2) {
+                        e.preventDefault();
+                        handleCellRightClick(r, c);
+                    }
+                    return;
+                }
+                if (isGameOver) return;
+                
+                const cell = grid[r][c];
+                if (!cell.isRevealed && !cell.isFlagged) {
                     faceBtn.textContent = '😮';
                 }
+                
+                moved = false;
+                pressTimer = setTimeout(() => {
+                    handleCellRightClick(r, c);
+                    pressTimer = null;
+                }, 500);
             });
-            cellElement.addEventListener('mouseup', (e) => {
-                if (!isGameOver && e.button === 0) {
-                    faceBtn.textContent = '🙂';
+
+            cellElement.addEventListener('pointermove', () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+                moved = true;
+            });
+
+            cellElement.addEventListener('pointerup', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                    
+                    if (!isGameOver && !moved) {
+                        faceBtn.textContent = '🙂';
+                        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                        if (isTouchDevice && mobileMode === 'flag') {
+                            handleCellRightClick(r, c);
+                        } else {
+                            handleCellClick(r, c);
+                        }
+                    }
                 }
             });
-            cellElement.addEventListener('mouseleave', (e) => {
+
+            cellElement.addEventListener('pointercancel', () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            });
+
+            cellElement.addEventListener('mouseleave', () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
                 if (!isGameOver) {
                     faceBtn.textContent = '🙂';
                 }
