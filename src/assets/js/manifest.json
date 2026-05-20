@@ -48,6 +48,22 @@
     "version": "1.0.0"
   },
   {
+    "id": "pomodoro",
+    "name": "Boutique Pomodoro",
+    "description": "Premium offline Pomodoro timer. Features an animated vector gauge, custom durations, tactile synthesized clock ticks, and vintage buzzer alerts.",
+    "category": "Utilities",
+    "icon": "[TIMER]",
+    "tags": [
+      "utilities",
+      "pomodoro",
+      "timer",
+      "clock",
+      "productivity"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "synth-keyboard",
     "name": "Retro Synthesizer",
     "description": "Premium client-side oscillator synth keyboard. Fully adjustable ADSR envelopes and waveform shapes.",

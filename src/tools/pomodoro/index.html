@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique Pomodoro - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em;">POMODORO TIMER</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <div class="synth-panel card">
+      <!-- Session Mode Selector -->
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="work">WORK</button>
+        <button class="mode-btn" data-mode="short">SHORT BREAK</button>
+        <button class="mode-btn" data-mode="long">LONG BREAK</button>
+      </div>
+
+      <!-- Animated SVG Progress Circle and Clock Readout -->
+      <div class="dial-container">
+        <svg width="240" height="240" viewBox="0 0 200 200" class="timer-dial">
+          <circle cx="100" cy="100" r="88" class="dial-bg"></circle>
+          <circle cx="100" cy="100" r="88" class="dial-progress" id="progress-ring"></circle>
+          <foreignObject x="0" y="0" width="200" height="200">
+            <div class="readout-wrapper">
+              <span id="timer-time">25:00</span>
+              <span id="timer-label">FOCUS SESSION</span>
+            </div>
+          </foreignObject>
+        </svg>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="playback-controls">
+        <button id="btn-toggle" class="btn-primary" aria-label="Start Timer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <span id="toggle-text">START</span>
+        </button>
+        
+        <button id="btn-reset" class="btn-secondary" aria-label="Reset Timer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+            <path d="M23 4v6h-6"></path>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <span>RESET</span>
+        </button>
+      </div>
+
+      <!-- Audio Options (Tactile sound components) -->
+      <div class="sound-options">
+        <label class="checkbox-container">
+          <input type="checkbox" id="tick-toggle" checked>
+          <span class="custom-checkbox">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="checkbox-label">TACTILE ANALOG TICK</span>
+        </label>
+      </div>
+
+      <!-- Configuration Settings Panel -->
+      <div class="settings-panel">
+        <span class="section-title">TIMER CONFIGURATION</span>
+        <div class="settings-grid">
+          <!-- Work slider -->
+          <div class="config-box">
+            <div class="config-header">
+              <span class="config-name">WORK TIMER</span>
+              <span id="work-val" class="config-val">25 min</span>
+            </div>
+            <input type="range" id="input-work" min="1" max="60" step="1" value="25">
+          </div>
+
+          <!-- Short Break slider -->
+          <div class="config-box">
+            <div class="config-header">
+              <span class="config-name">SHORT BREAK</span>
+              <span id="short-val" class="config-val">5 min</span>
+            </div>
+            <input type="range" id="input-short" min="1" max="30" step="1" value="5">
+          </div>
+
+          <!-- Long Break slider -->
+          <div class="config-box">
+            <div class="config-header">
+              <span class="config-name">LONG BREAK</span>
+              <span id="long-val" class="config-val">15 min</span>
+            </div>
+            <input type="range" id="input-long" min="1" max="60" step="1" value="15">
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
