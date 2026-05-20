@@ -1,4 +1,4 @@
-# Design Spec: Web Lab Modular Static Toolbox
+# Design Spec: Jukebox Modular Static Toolbox
 
 A professional, modern, and highly modular personal website that functions as a rich, accessible toolbox for on-browser utilities (compression, file conversion, media utilities, interactive toys, etc.). Hosted entirely as a static site via GitHub Pages, with a dynamic build-time auto-discovery mechanism powered by Vite.
 
@@ -12,7 +12,7 @@ jukebox/
 ├── docs/                         <-- Project specs and design documentation
 │   └── superpowers/
 │       └── specs/
-│           └── 2026-05-20-web-lab-architecture-design.md
+│           └── 2026-05-20-jukebox-architecture-design.md
 ├── public/                       <-- Global static assets (favicons, manifest.json)
 ├── src/
 │   ├── assets/                   <-- Shared resources
@@ -68,7 +68,7 @@ We implement a modern HSL color framework in `/src/assets/css/main.css` targetin
 - **Primary Accents:** Slate Blue (`hsl(230, 75%, 60%)`) and Emerald Teal (`hsl(160, 75%, 45%)`)
 
 ### 3.2 Homepage Hub Layout
-- **Minimal Navigation:** Header with "Web Lab", Light/Dark Toggle, and external repo icon.
+- **Minimal Navigation:** Header with "Jukebox", Light/Dark Toggle, and external repo icon.
 - **Hero Hub & Search Bar:** An elegant search input that immediately filters tools by name, description, category, or tag with no lag.
 - **Categories Tab Bar:** Seamless slider chips to filter the grid down to `All`, `Media`, `Utilities`, `Music`, `Toys`.
 - **Dynamic CSS Grid:** Beautiful tool cards that exhibit smooth hover transforms (micro-animations, slight drop shadows, gradient border reveals).
