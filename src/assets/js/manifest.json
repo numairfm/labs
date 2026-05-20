@@ -64,9 +64,9 @@
   },
   {
     "id": "gd-wave",
-    "name": "Wave Game",
+    "name": "Wave Editor",
     "description": "A high-accuracy physics Wave game mode and visual level editor.",
-    "category": "Toys",
+    "category": "Games",
     "icon": "triangle",
     "tags": [
       "game",
