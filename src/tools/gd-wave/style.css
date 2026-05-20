@@ -164,6 +164,16 @@ canvas#game-canvas {
 .icon-steep.tr { transform: scaleY(-1); }
 .icon-steep.tl { transform: scale(-1, -1); }
 
+.icon-long {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-bottom: 10px solid var(--text-primary);
+}
+.icon-long.bl { transform: scaleX(-1); }
+.icon-long.tr { transform: scaleY(-1); }
+.icon-long.tl { transform: scale(-1, -1); }
+
 .icon-portal {
   width: 12px;
   height: 20px;

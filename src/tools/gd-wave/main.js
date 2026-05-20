@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- ENGINE CONSTANTS & STATE ---
   const GRID_SIZE = 40;
   const WAVE_SPEED_X = 400; // pixels per second
-  const FORGIVENESS_MARGIN = 6; // Hitbox reduction for forgiving gameplay
   const CEILING_Y = 0;
   const FLOOR_Y = 15 * GRID_SIZE; // 600px
 
@@ -53,10 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    if (mode === 'edit') {
-      // Center camera vertically on resize
-      camera.y = -(canvas.height / 2 - FLOOR_Y/2);
-    }
+    // Center the 600px world vertically on the screen for both modes
+    camera.y = -(canvas.height / 2 - FLOOR_Y/2);
   }
   window.addEventListener('resize', resize);
   resize();
@@ -88,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     player.isMini = false;
     player.trail = [{x: player.x, y: player.y}];
     camera.x = 0;
-    camera.y = 0; // Lock camera to borders
+    camera.y = -(canvas.height / 2 - FLOOR_Y/2); // Perfectly centered
     crashOverlay.style.display = 'none';
   }
 
@@ -228,16 +225,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkCollisions() {
     currentHitboxes = [];
     player.size = player.isMini ? 8 : 16;
-    const halfSize = player.size / 2;
+    
+    // Exact strict AABB square hitbox for wave
+    const hitSize = player.isMini ? 4 : 8; 
+    const halfHit = hitSize / 2;
     const px = player.x;
     const py = player.y;
-    const pm = FORGIVENESS_MARGIN; 
     
     const pBox = {
-      left: px - halfSize + pm,
-      right: px + halfSize - pm,
-      top: py - halfSize + pm,
-      bottom: py + halfSize - pm
+      left: px - halfHit,
+      right: px + halfHit,
+      top: py - halfHit,
+      bottom: py + halfHit
     };
 
     currentHitboxes.push({ type: 'aabb', box: pBox, color: 'lime' });
@@ -258,7 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const ox = obj.x * GRID_SIZE;
       const oy = obj.y * GRID_SIZE;
       
-      if (ox > px + 100 || ox + GRID_SIZE * 2 < px - 100) continue;
+      // Expand cull radius to account for long slopes
+      if (ox > px + 100 || ox + GRID_SIZE * 3 < px - 100) continue;
 
       if (obj.type === 'portal-normal' || obj.type === 'portal-mini') {
         const pRect = { left: ox + 14, right: ox + 26, top: oy, bottom: oy + GRID_SIZE };
@@ -270,59 +270,55 @@ document.addEventListener('DOMContentLoaded', () => {
         continue;
       }
 
-      const gm = pm; // Forgiving margin
-
       if (obj.type === 'block') {
-        const oBox = {
-          left: ox + gm,
-          right: ox + GRID_SIZE - gm,
-          top: oy + gm,
-          bottom: oy + GRID_SIZE - gm
-        };
+        const oBox = { left: ox, right: ox + GRID_SIZE, top: oy, bottom: oy + GRID_SIZE };
         currentHitboxes.push({ type: 'aabb', box: oBox, color: 'red' });
         if (pBox.left < oBox.right && pBox.right > oBox.left && pBox.top < oBox.bottom && pBox.bottom > oBox.top) {
           isCrashed = true;
         }
       } 
       else if (obj.type.startsWith('spike')) {
-        let p0, p1, p2;
+        let sBox;
         if (obj.type === 'spike-up') {
-          p0 = { x: ox + GRID_SIZE/2, y: oy + gm }; 
-          p1 = { x: ox + gm, y: oy + GRID_SIZE - gm }; 
-          p2 = { x: ox + GRID_SIZE - gm, y: oy + GRID_SIZE - gm }; 
+          sBox = { left: ox + 14, right: ox + 26, top: oy + 12, bottom: oy + 28 };
         } else if (obj.type === 'spike-down') {
-          p0 = { x: ox + GRID_SIZE/2, y: oy + GRID_SIZE - gm };
-          p1 = { x: ox + gm, y: oy + gm };
-          p2 = { x: ox + GRID_SIZE - gm, y: oy + gm };
+          sBox = { left: ox + 14, right: ox + 26, top: oy + 12, bottom: oy + 28 };
         } else if (obj.type === 'spike-left') {
-          p0 = { x: ox + gm, y: oy + GRID_SIZE/2 };
-          p1 = { x: ox + GRID_SIZE - gm, y: oy + gm };
-          p2 = { x: ox + GRID_SIZE - gm, y: oy + GRID_SIZE - gm };
+          sBox = { left: ox + 12, right: ox + 28, top: oy + 14, bottom: oy + 26 };
         } else if (obj.type === 'spike-right') {
-          p0 = { x: ox + GRID_SIZE - gm, y: oy + GRID_SIZE/2 };
-          p1 = { x: ox + gm, y: oy + gm };
-          p2 = { x: ox + gm, y: oy + GRID_SIZE - gm };
+          sBox = { left: ox + 12, right: ox + 28, top: oy + 14, bottom: oy + 26 };
         }
-        currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
-        const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
-        for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
+        currentHitboxes.push({ type: 'aabb', box: sBox, color: 'red' });
+        if (pBox.left < sBox.right && pBox.right > sBox.left && pBox.top < sBox.bottom && pBox.bottom > sBox.top) {
+          isCrashed = true;
+        }
       }
       else if (obj.type.startsWith('slope')) {
         let p0, p1, p2;
-        if (obj.type === 'slope-bl') { p0 = {x: ox+gm, y: oy+GRID_SIZE-gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; p2 = {x: ox+gm, y: oy+gm}; }
-        else if (obj.type === 'slope-br') { p0 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; p1 = {x: ox+gm, y: oy+GRID_SIZE-gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+gm}; }
-        else if (obj.type === 'slope-tl') { p0 = {x: ox+gm, y: oy+gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+gm}; p2 = {x: ox+gm, y: oy+GRID_SIZE-gm}; }
-        else if (obj.type === 'slope-tr') { p0 = {x: ox+GRID_SIZE-gm, y: oy+gm}; p1 = {x: ox+gm, y: oy+gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; }
+        if (obj.type === 'slope-bl') { p0 = {x: ox, y: oy+GRID_SIZE}; p1 = {x: ox+GRID_SIZE, y: oy+GRID_SIZE}; p2 = {x: ox, y: oy}; }
+        else if (obj.type === 'slope-br') { p0 = {x: ox+GRID_SIZE, y: oy+GRID_SIZE}; p1 = {x: ox, y: oy+GRID_SIZE}; p2 = {x: ox+GRID_SIZE, y: oy}; }
+        else if (obj.type === 'slope-tl') { p0 = {x: ox, y: oy}; p1 = {x: ox+GRID_SIZE, y: oy}; p2 = {x: ox, y: oy+GRID_SIZE}; }
+        else if (obj.type === 'slope-tr') { p0 = {x: ox+GRID_SIZE, y: oy}; p1 = {x: ox, y: oy}; p2 = {x: ox+GRID_SIZE, y: oy+GRID_SIZE}; }
         currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
         const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
         for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
       }
       else if (obj.type.startsWith('steep')) {
         let p0, p1, p2;
-        if (obj.type === 'steep-bl') { p0 = {x: ox+gm, y: oy+(GRID_SIZE*2)-gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+(GRID_SIZE*2)-gm}; p2 = {x: ox+gm, y: oy+gm}; }
-        else if (obj.type === 'steep-br') { p0 = {x: ox+GRID_SIZE-gm, y: oy+(GRID_SIZE*2)-gm}; p1 = {x: ox+gm, y: oy+(GRID_SIZE*2)-gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+gm}; }
-        else if (obj.type === 'steep-tl') { p0 = {x: ox+gm, y: oy-GRID_SIZE+gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy-GRID_SIZE+gm}; p2 = {x: ox+gm, y: oy+GRID_SIZE-gm}; }
-        else if (obj.type === 'steep-tr') { p0 = {x: ox+GRID_SIZE-gm, y: oy-GRID_SIZE+gm}; p1 = {x: ox+gm, y: oy-GRID_SIZE+gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; }
+        if (obj.type === 'steep-bl') { p0 = {x: ox, y: oy+(GRID_SIZE*2)}; p1 = {x: ox+GRID_SIZE, y: oy+(GRID_SIZE*2)}; p2 = {x: ox, y: oy}; }
+        else if (obj.type === 'steep-br') { p0 = {x: ox+GRID_SIZE, y: oy+(GRID_SIZE*2)}; p1 = {x: ox, y: oy+(GRID_SIZE*2)}; p2 = {x: ox+GRID_SIZE, y: oy}; }
+        else if (obj.type === 'steep-tl') { p0 = {x: ox, y: oy-GRID_SIZE}; p1 = {x: ox+GRID_SIZE, y: oy-GRID_SIZE}; p2 = {x: ox, y: oy+GRID_SIZE}; }
+        else if (obj.type === 'steep-tr') { p0 = {x: ox+GRID_SIZE, y: oy-GRID_SIZE}; p1 = {x: ox, y: oy-GRID_SIZE}; p2 = {x: ox+GRID_SIZE, y: oy+GRID_SIZE}; }
+        currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
+        const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
+        for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
+      }
+      else if (obj.type.startsWith('long')) {
+        let p0, p1, p2;
+        if (obj.type === 'long-bl') { p0 = {x: ox, y: oy+GRID_SIZE}; p1 = {x: ox+(GRID_SIZE*2), y: oy+GRID_SIZE}; p2 = {x: ox, y: oy}; }
+        else if (obj.type === 'long-br') { p0 = {x: ox+(GRID_SIZE*2), y: oy+GRID_SIZE}; p1 = {x: ox, y: oy+GRID_SIZE}; p2 = {x: ox+(GRID_SIZE*2), y: oy}; }
+        else if (obj.type === 'long-tl') { p0 = {x: ox, y: oy}; p1 = {x: ox+(GRID_SIZE*2), y: oy}; p2 = {x: ox, y: oy+GRID_SIZE}; }
+        else if (obj.type === 'long-tr') { p0 = {x: ox+(GRID_SIZE*2), y: oy}; p1 = {x: ox, y: oy}; p2 = {x: ox+(GRID_SIZE*2), y: oy+GRID_SIZE}; }
         currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
         const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
         for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
@@ -349,6 +345,31 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.lineTo(canvas.width, y - camera.y);
     }
     ctx.stroke();
+
+    // Editor Spawn Point Indicator
+    ctx.save();
+    const spawnX = 200 - camera.x;
+    const spawnY = FLOOR_Y / 2 - camera.y;
+    ctx.translate(spawnX, spawnY);
+    ctx.rotate(Math.PI/4); // Base wave angle
+    ctx.fillStyle = 'rgba(100, 150, 255, 0.2)';
+    ctx.strokeStyle = 'rgba(100, 150, 255, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    const s = 16; // Normal size
+    ctx.moveTo(s, 0);
+    ctx.lineTo(-s, -s);
+    ctx.lineTo(-s, s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Draw tiny hitbox square on spawn
+    ctx.rotate(-Math.PI/4);
+    ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+    ctx.fillRect(-4, -4, 8, 8);
+    
+    ctx.restore();
   }
 
   function drawLevel() {
@@ -368,8 +389,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const screenX = (obj.x * GRID_SIZE) - camera.x;
       const screenY = (obj.y * GRID_SIZE) - camera.y;
 
-      if (screenX + GRID_SIZE * 2 < 0 || screenX > canvas.width) continue;
-      if (screenY + GRID_SIZE * 2 < 0 || screenY > canvas.height) continue;
+      if (screenX + GRID_SIZE * 3 < 0 || screenX > canvas.width) continue;
+      if (screenY + GRID_SIZE * 3 < 0 || screenY > canvas.height) continue;
 
       if (obj.type === 'block') {
         ctx.fillStyle = '#fff';
@@ -403,6 +424,15 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (obj.type === 'steep-br') { ctx.moveTo(screenX + GRID_SIZE, screenY + GRID_SIZE*2); ctx.lineTo(screenX, screenY + GRID_SIZE*2); ctx.lineTo(screenX + GRID_SIZE, screenY); }
         else if (obj.type === 'steep-tl') { ctx.moveTo(screenX, screenY - GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY - GRID_SIZE); ctx.lineTo(screenX, screenY + GRID_SIZE); }
         else if (obj.type === 'steep-tr') { ctx.moveTo(screenX + GRID_SIZE, screenY - GRID_SIZE); ctx.lineTo(screenX, screenY - GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); }
+        ctx.fill(); ctx.closePath();
+      }
+      else if (obj.type.startsWith('long')) {
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        if (obj.type === 'long-bl') { ctx.moveTo(screenX, screenY + GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE*2, screenY + GRID_SIZE); ctx.lineTo(screenX, screenY); }
+        else if (obj.type === 'long-br') { ctx.moveTo(screenX + GRID_SIZE*2, screenY + GRID_SIZE); ctx.lineTo(screenX, screenY + GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE*2, screenY); }
+        else if (obj.type === 'long-tl') { ctx.moveTo(screenX, screenY); ctx.lineTo(screenX + GRID_SIZE*2, screenY); ctx.lineTo(screenX, screenY + GRID_SIZE); }
+        else if (obj.type === 'long-tr') { ctx.moveTo(screenX + GRID_SIZE*2, screenY); ctx.lineTo(screenX, screenY); ctx.lineTo(screenX + GRID_SIZE*2, screenY + GRID_SIZE); }
         ctx.fill(); ctx.closePath();
       }
       else if (obj.type.startsWith('portal')) {
