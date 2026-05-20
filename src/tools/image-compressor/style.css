@@ -1,0 +1,83 @@
+.workspace-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.drop-area {
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--bg-card);
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.drop-area.drag-active {
+  border-color: var(--accent-teal);
+  background-color: var(--bg-secondary);
+}
+
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.control-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-box input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-blue);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.result-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-wrapper {
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: var(--bg-secondary);
+}
+
+.image-wrapper img {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+}
