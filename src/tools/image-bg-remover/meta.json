@@ -1,0 +1,9 @@
+{
+  "name": "Image Background Remover",
+  "description": "Remove backgrounds automatically with AI Auto Mode or manually with the Retro Magic Color Eraser.",
+  "category": "Utilities",
+  "icon": "blur_off",
+  "tags": ["image", "design", "ai", "utility", "offline"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

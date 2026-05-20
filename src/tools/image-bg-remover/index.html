@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Background Remover - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/labs/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em; font-family: var(--font-heading); text-transform: uppercase;">BG REMOVER</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <!-- Toolbar Panel -->
+    <div class="toolbar card">
+      <!-- Upload/Source section -->
+      <div class="tools-group">
+        <button id="btn-upload" class="action-btn primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Upload Image
+        </button>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="tools-group segment-control">
+        <button id="mode-ai" class="segment-btn active">🤖 AI Auto</button>
+        <button id="mode-manual" class="segment-btn">🎨 Retro Eraser</button>
+      </div>
+
+      <!-- AI Controls -->
+      <div id="ai-controls" class="tools-group mode-settings-group">
+        <button id="btn-remove-ai" class="action-btn accent disabled" title="Remove background automatically using AI model">
+          🚀 Erase BG with AI
+        </button>
+      </div>
+
+      <!-- Manual Controls (Hidden initially) -->
+      <div id="manual-controls" class="tools-group mode-settings-group" style="display: none;">
+        <div class="setting-item">
+          <label for="tolerance-range" class="setting-label">Tolerance: <span id="tolerance-val">20</span></label>
+          <input type="range" id="tolerance-range" min="1" max="100" value="20" class="brutalist-slider">
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Action:</span>
+          <div class="tool-options">
+            <button id="tool-picker" class="action-btn outline active" title="Tap a color on the image to erase all matching colors">🎯 Color Key</button>
+            <button id="tool-brush" class="action-btn outline" title="Drag to erase pixels like a brush">🖌️ Brush</button>
+          </div>
+        </div>
+        <div id="brush-size-item" class="setting-item" style="display: none;">
+          <label for="brush-range" class="setting-label">Brush Size: <span id="brush-val">20</span>px</label>
+          <input type="range" id="brush-range" min="5" max="100" value="20" class="brutalist-slider">
+        </div>
+      </div>
+
+      <!-- Output / Reset controls -->
+      <div class="tools-group actions-group">
+        <button id="btn-undo" class="action-btn outline disabled" title="Undo last action">↩️ Undo</button>
+        <button id="btn-reset" class="action-btn outline disabled" title="Reset image to original size and state">🔄 Reset</button>
+        <button id="btn-download" class="action-btn disabled" title="Download PNG with transparent background">💾 Download PNG</button>
+      </div>
+    </div>
+
+    <!-- Main Working Canvas Area -->
+    <div class="canvas-container card" id="drop-zone">
+      <div id="upload-prompt" class="upload-prompt">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; color: var(--text-secondary);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        <p class="prompt-main">Drag and drop an image here</p>
+        <p class="prompt-sub">Supports PNG, JPG, WEBP. Fully local processing.</p>
+      </div>
+
+      <!-- Loading Spinner / AI Status Overlay -->
+      <div id="ai-loading" class="ai-loading-overlay" style="display: none;">
+        <div class="spinner-container card">
+          <div class="retro-spinner"></div>
+          <p id="ai-loading-text">Downloading AI Model (~40MB)...</p>
+          <div class="retro-progress-bar">
+            <div id="retro-progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-stack" style="display: none;">
+        <canvas id="editor-canvas"></canvas>
+      </div>
+    </div>
+    
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
