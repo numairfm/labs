@@ -41,20 +41,38 @@
         <span class="hud-label">BEST</span>
         <span id="best-score" class="hud-value">0</span>
       </div>
-      <div class="hud-item">
-        <span class="hud-label">LENGTH</span>
-        <span id="snake-length" class="hud-value">1</span>
+      <div class="hud-item" id="control-toggle-pill" style="cursor: pointer; user-select: none;">
+        <span class="hud-label">INPUT</span>
+        <span id="input-mode-label" class="hud-value" style="color: var(--accent-teal);">DPAD</span>
       </div>
     </div>
 
     <div class="canvas-wrapper">
       <canvas id="game-canvas"></canvas>
+      <div id="swipe-overlay" class="swipe-overlay" style="display: none;">
+        <p>SWIPE TO MOVE</p>
+        <div class="swipe-arrows">▲<br>◀ &nbsp; &nbsp; ▶<br>▼</div>
+      </div>
       <div id="overlay" class="overlay">
         <div class="overlay-box">
           <h2 id="overlay-title">SNAKE</h2>
-          <p id="overlay-msg">Use arrow keys or WASD to move</p>
+          <p id="overlay-msg">Use arrow keys/WASD or D-pad to move</p>
           <button id="start-btn" class="start-btn">START GAME</button>
         </div>
+      </div>
+    </div>
+
+    <div class="dpad-container" id="dpad-container" style="display: none;">
+      <div class="dpad-row">
+        <button class="dpad-btn btn-up" id="dpad-up" aria-label="Up">▲</button>
+      </div>
+      <div class="dpad-row">
+        <button class="dpad-btn btn-left" id="dpad-left" aria-label="Left">◀</button>
+        <div class="dpad-center"></div>
+        <button class="dpad-btn btn-right" id="dpad-right" aria-label="Right">▶</button>
+      </div>
+      <div class="dpad-row">
+        <button class="dpad-btn btn-down" id="dpad-down" aria-label="Down">▼</button>
       </div>
     </div>
   </main>

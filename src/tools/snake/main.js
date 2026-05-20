@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elapsed = 0;
     lastTime = null;
     scoreEl.textContent = '0';
-    lengthEl.textContent = snake.length;
+    if (lengthEl) lengthEl.textContent = snake.length;
     spawnFood();
   }
 
@@ -68,6 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Input: queued direction to prevent instant-reverse death ──
   const TICK_MS = 100; // 10 updates/sec
+
+  function queueDirection(newDir) {
+    if (nextDirQueue.length < 2) {
+      nextDirQueue.push(newDir);
+    }
+  }
 
   window.addEventListener('keydown', (e) => {
     const map = {
@@ -88,11 +94,99 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!newDir) return;
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
 
-    // Add to queue, max 2 buffered inputs
-    if (nextDirQueue.length < 2) {
-      nextDirQueue.push(newDir);
-    }
+    queueDirection(newDir);
   });
+
+  // D-pad mobile support
+  const dpadContainer = document.getElementById('dpad-container');
+  const btnUp = document.getElementById('dpad-up');
+  const btnDown = document.getElementById('dpad-down');
+  const btnLeft = document.getElementById('dpad-left');
+  const btnRight = document.getElementById('dpad-right');
+
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  
+  // Control mode toggle
+  const controlTogglePill = document.getElementById('control-toggle-pill');
+  const inputModeLabel = document.getElementById('input-mode-label');
+  const swipeOverlay = document.getElementById('swipe-overlay');
+  
+  let preferredInputMode = localStorage.getItem('snake-input-mode') || 'dpad'; // 'dpad' or 'swipe'
+  
+  function applyInputMode() {
+    if (inputModeLabel) inputModeLabel.textContent = preferredInputMode.toUpperCase();
+    if (preferredInputMode === 'swipe') {
+      if (dpadContainer) dpadContainer.style.display = 'none';
+      if (swipeOverlay) swipeOverlay.style.display = 'flex';
+    } else {
+      if (isTouchDevice && dpadContainer) {
+        dpadContainer.style.display = 'flex';
+      } else if (dpadContainer) {
+        dpadContainer.style.display = 'none';
+      }
+      if (swipeOverlay) swipeOverlay.style.display = 'none';
+    }
+  }
+  
+  if (controlTogglePill) {
+    controlTogglePill.addEventListener('click', () => {
+      preferredInputMode = preferredInputMode === 'dpad' ? 'swipe' : 'dpad';
+      localStorage.setItem('snake-input-mode', preferredInputMode);
+      applyInputMode();
+    });
+  }
+  
+  applyInputMode();
+  
+  // Swipe Detection Coordinates Tracker
+  let touchStartX = 0;
+  let touchStartY = 0;
+  
+  canvas.addEventListener('touchstart', (e) => {
+    if (preferredInputMode !== 'swipe') return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  canvas.addEventListener('touchend', (e) => {
+    if (preferredInputMode !== 'swipe') return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    
+    if (Math.max(absX, absY) > 30) {
+      // Horizontal swipe vs Vertical swipe
+      if (absX > absY) {
+        if (dx > 0) queueDirection({ x: 1, y: 0 }); // Right
+        else queueDirection({ x: -1, y: 0 }); // Left
+      } else {
+        if (dy > 0) queueDirection({ x: 0, y: 1 }); // Down
+        else queueDirection({ x: 0, y: -1 }); // Up
+      }
+    }
+  }, { passive: true });
+
+  if (btnUp && btnDown && btnLeft && btnRight) {
+    const bindDpad = (btn, dirVal) => {
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        queueDirection(dirVal);
+      }, { passive: false });
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        queueDirection(dirVal);
+      });
+    };
+
+    bindDpad(btnUp, { x: 0, y: -1 });
+    bindDpad(btnDown, { x: 0, y: 1 });
+    bindDpad(btnLeft, { x: -1, y: 0 });
+    bindDpad(btnRight, { x: 1, y: 0 });
+  }
 
   // ── Update ───────────────────────────────────────────
   function update() {
@@ -125,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newHead.x === food.x && newHead.y === food.y) {
       score += 10;
       scoreEl.textContent = score;
-      lengthEl.textContent = snake.length;
+      if (lengthEl) lengthEl.textContent = snake.length;
       if (score > best) {
         best = score;
         bestEl.textContent = best;
