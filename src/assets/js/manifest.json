@@ -16,6 +16,22 @@
     "version": "1.0.0"
   },
   {
+    "id": "doodle-jump",
+    "name": "Doodle Jump",
+    "description": "Auto-jumping platformer. Navigate platforms and see how high you can go!",
+    "category": "Toys",
+    "icon": "🐸",
+    "tags": [
+      "game",
+      "jump",
+      "platformer",
+      "arcade",
+      "doodle"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "drum-pad",
     "name": "Virtual Drum Pad",
     "description": "Interactive retro drum machine synth. Plays real-time synthesized beats client-side.",
@@ -32,6 +48,36 @@
     "version": "1.0.0"
   },
   {
+    "id": "flappy-bird",
+    "name": "Flappy Bird",
+    "description": "Flap your way through procedurally generated pipes.",
+    "category": "Toys",
+    "icon": "twitter",
+    "tags": [
+      "game",
+      "flappy",
+      "arcade",
+      "physics"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "gd-wave",
+    "name": "Wave Game",
+    "description": "A high-accuracy physics Wave game mode and visual level editor.",
+    "category": "Toys",
+    "icon": "triangle",
+    "tags": [
+      "game",
+      "wave",
+      "editor",
+      "geometry"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "image-compressor",
     "name": "Image Compressor",
     "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",
@@ -43,6 +89,21 @@
       "png",
       "jpeg",
       "optimize"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "minesweeper",
+    "name": "Minesweeper",
+    "description": "Classic grid-based mine clearing puzzle.",
+    "category": "Toys",
+    "icon": "💣",
+    "tags": [
+      "game",
+      "minesweeper",
+      "puzzle",
+      "retro"
     ],
     "author": "Numair",
     "version": "1.0.0"
@@ -80,6 +141,21 @@
     "version": "1.0.0"
   },
   {
+    "id": "snake",
+    "name": "Snake",
+    "description": "Classic retro snake game. Eat food, grow longer, avoid walls and yourself.",
+    "category": "Toys",
+    "icon": "🐍",
+    "tags": [
+      "game",
+      "snake",
+      "retro",
+      "arcade"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "synth-keyboard",
     "name": "Retro Synthesizer",
     "description": "Premium client-side oscillator synth keyboard. Fully adjustable ADSR envelopes and waveform shapes.",
@@ -107,6 +183,36 @@
       "calculator",
       "bytes",
       "metric"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "video-compressor",
+    "name": "Video Compressor",
+    "description": "Compress and scale videos entirely in your browser using canvas capture.",
+    "category": "Utilities",
+    "icon": "compress",
+    "tags": [
+      "video",
+      "compress",
+      "offline",
+      "utility"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "watermark-remover",
+    "name": "Watermark Remover",
+    "description": "Remove watermarks using local AI canvas inpainting.",
+    "category": "Utilities",
+    "icon": "eraser",
+    "tags": [
+      "image",
+      "AI",
+      "canvas",
+      "utility"
     ],
     "author": "Numair",
     "version": "1.0.0"
