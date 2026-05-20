@@ -1,0 +1,9 @@
+{
+  "name": "Doodle Jump",
+  "description": "Auto-jumping platformer. Navigate platforms and see how high you can go!",
+  "category": "Toys",
+  "icon": "🐸",
+  "tags": ["game", "jump", "platformer", "arcade", "doodle"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

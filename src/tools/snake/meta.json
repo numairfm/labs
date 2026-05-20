@@ -1,0 +1,9 @@
+{
+  "name": "Snake",
+  "description": "Classic retro snake game. Eat food, grow longer, avoid walls and yourself.",
+  "category": "Toys",
+  "icon": "🐍",
+  "tags": ["game", "snake", "retro", "arcade"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

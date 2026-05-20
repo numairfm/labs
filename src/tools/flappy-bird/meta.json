@@ -1,0 +1,9 @@
+{
+  "name": "Flappy Bird",
+  "description": "Flap your way through procedurally generated pipes.",
+  "category": "Toys",
+  "icon": "twitter",
+  "tags": ["game", "flappy", "arcade", "physics"],
+  "version": "1.0.0",
+  "author": "Numair"
+}

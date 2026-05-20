@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake - JUKEBOX</title>
+  <meta name="description" content="Classic retro Snake game. Eat food, grow longer, avoid walls and yourself.">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      try { document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); } catch(e) {}
+    })();
+  </script>
+</head>
+<body class="game-body">
+  <header class="header absolute-header">
+    <a href="/" class="btn-icon header-btn" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing:0.1em;font-size:1.2rem;">SNAKE</h1>
+    <button id="theme-btn" class="btn-icon header-btn" aria-label="Toggle Theme">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="snake-container">
+    <div class="hud">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span id="score" class="hud-value">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">BEST</span>
+        <span id="best-score" class="hud-value">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LENGTH</span>
+        <span id="snake-length" class="hud-value">1</span>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="game-canvas"></canvas>
+      <div id="overlay" class="overlay">
+        <div class="overlay-box">
+          <h2 id="overlay-title">SNAKE</h2>
+          <p id="overlay-msg">Use arrow keys or WASD to move</p>
+          <button id="start-btn" class="start-btn">START GAME</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

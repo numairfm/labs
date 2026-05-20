@@ -1,0 +1,9 @@
+{
+  "name": "Minesweeper",
+  "description": "Classic grid-based mine clearing puzzle.",
+  "category": "Toys",
+  "icon": "💣",
+  "tags": ["game", "minesweeper", "puzzle", "retro"],
+  "version": "1.0.0",
+  "author": "Numair"
+}

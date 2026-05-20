@@ -1,0 +1,145 @@
+/* Snake - Retro Neon Arcade Styling */
+
+.game-body {
+  background-color: #0a0a0f;
+  overflow: hidden;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+}
+
+.absolute-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: transparent;
+  border-bottom: none;
+  padding: 0.75rem 1.25rem;
+}
+
+.header-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #aaa;
+  border-radius: 0;
+}
+.header-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.snake-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 4rem;
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.hud-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: #4ade80;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hud-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.5);
+}
+
+/* Canvas wrapper */
+.canvas-wrapper {
+  position: relative;
+  line-height: 0;
+}
+
+#game-canvas {
+  display: block;
+  border: 2px solid #1a2a1a;
+  box-shadow: 0 0 40px rgba(74, 222, 128, 0.15), inset 0 0 40px rgba(0,0,0,0.5);
+  image-rendering: pixelated;
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay-box {
+  text-align: center;
+  border: 2px solid #4ade80;
+  padding: 2.5rem 3rem;
+  background: rgba(0, 15, 0, 0.9);
+  box-shadow: 0 0 40px rgba(74,222,128,0.3), inset 0 0 20px rgba(74,222,128,0.05);
+}
+
+.overlay-box h2 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: #4ade80;
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.overlay-box p {
+  color: #888;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.start-btn {
+  background: #4ade80;
+  color: #000;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.start-btn:hover {
+  background: #86efac;
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+  transform: scale(1.04);
+}
