@@ -1,3 +1,6 @@
+import { initTheme, toggleTheme } from '../../assets/js/utils.js';
+initTheme();
+
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 const startScreen = document.getElementById('start-screen');
@@ -226,6 +229,5 @@ startBtn.addEventListener('click', resetGame);
 restartBtn.addEventListener('click', resetGame);
 
 // Theme Toggle
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('theme-dark');
-});
+themeToggle.addEventListener('click', toggleTheme);
+

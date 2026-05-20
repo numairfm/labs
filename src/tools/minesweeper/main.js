@@ -1,3 +1,5 @@
+import { initTheme, toggleTheme } from '../../assets/js/utils.js';
+
 const gridElement = document.getElementById('minesweeper-grid');
 const difficultySelect = document.getElementById('difficulty-select');
 const resetBtn = document.getElementById('reset-btn');
@@ -5,6 +7,10 @@ const faceBtn = document.getElementById('face-btn');
 const mineCounterElement = document.getElementById('mine-counter');
 const timerElement = document.getElementById('timer');
 const themeToggle = document.getElementById('theme-toggle');
+const msMessage = document.getElementById('ms-message');
+const msMessageTitle = document.getElementById('ms-message-title');
+const msMessageBody = document.getElementById('ms-message-body');
+const msMessageBtn = document.getElementById('ms-message-btn');
 
 const DIFFICULTIES = {
     beginner: { rows: 9, cols: 9, mines: 10 },
@@ -25,7 +31,7 @@ let seconds = 0;
 let revealedCount = 0;
 
 function init() {
-    setupTheme();
+    initTheme();
     bindEvents();
     startNewGame();
 }
@@ -38,32 +44,11 @@ function bindEvents() {
 
     resetBtn.addEventListener('click', startNewGame);
     faceBtn.addEventListener('click', startNewGame);
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.body.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        document.body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcons(newTheme);
+    themeToggle.addEventListener('click', toggleTheme);
+    if (msMessageBtn) msMessageBtn.addEventListener('click', () => {
+        msMessage.classList.remove('visible');
+        startNewGame();
     });
-}
-
-function setupTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    updateThemeIcons(savedTheme);
-}
-
-function updateThemeIcons(theme) {
-    const sunIcon = document.querySelector('.sun-icon');
-    const moonIcon = document.querySelector('.moon-icon');
-    if (theme === 'dark') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-    } else {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-    }
 }
 
 function startNewGame() {
@@ -256,6 +241,11 @@ function gameOver(win, clickCell = null) {
                 }
             }
         }
+        setTimeout(() => {
+            msMessageTitle.textContent = '🎉 You Won!';
+            msMessageBody.textContent = `Cleared in ${seconds}s`;
+            msMessage.classList.add('visible');
+        }, 300);
     } else {
         faceBtn.textContent = '😵';
         for (let r = 0; r < rows; r++) {
@@ -266,7 +256,7 @@ function gameOver(win, clickCell = null) {
                     if (!cell.isFlagged) {
                         cell.element.textContent = '💣';
                         if (clickCell && cell === clickCell) {
-                            cell.element.classList.add('mine');
+                            cell.element.classList.add('mine-hit');
                         }
                     }
                 } else if (cell.isFlagged) {
@@ -275,6 +265,11 @@ function gameOver(win, clickCell = null) {
                 }
             }
         }
+        setTimeout(() => {
+            msMessageTitle.textContent = '💥 Game Over';
+            msMessageBody.textContent = `You survived ${seconds}s`;
+            msMessage.classList.add('visible');
+        }, 600);
     }
 }
 

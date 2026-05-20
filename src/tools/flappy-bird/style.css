@@ -1,29 +1,40 @@
+/* ── Flappy Bird — Global Theme Compliant ── */
+
 body {
   margin: 0;
   padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  background-color: var(--bg-color, #1a1a2e);
-  color: var(--text-color, #ffffff);
-  font-family: 'Inter', sans-serif;
 }
 
-.header {
+/* ── Header ── */
+.flappy-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--header-bg, rgba(0, 0, 0, 0.2));
+  padding: 0.85rem 1.5rem;
+  background-color: var(--bg-card);
+  border-bottom: 2px solid var(--border-color);
+  flex-shrink: 0;
   z-index: 10;
 }
 
-.header h1 {
+.flappy-header h1 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
   margin: 0;
-  font-size: 1.5rem;
 }
 
+/* ── Game Container ── */
 .game-container {
   flex: 1;
   display: flex;
@@ -31,100 +42,98 @@ body {
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 2rem;
+  background: var(--bg-primary);
 }
 
 canvas {
-  background-color: #87CEEB; /* Sky blue */
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  max-width: 100%;
+  display: block;
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-main);
   max-height: 100%;
-  object-fit: contain;
+  image-rendering: pixelated;
 }
 
-.theme-dark canvas {
-  background-color: #1a2a40; /* Dark sky */
+/* ── HUD score ── */
+#hud {
+  position: absolute;
+  top: 1.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  pointer-events: none;
+  z-index: 4;
+  text-shadow: 2px 2px 0 var(--bg-primary);
 }
 
+/* ── UI overlay (start / game over screens) ── */
 #ui-layer {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
   z-index: 5;
 }
 
 .screen {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem 4rem;
-  border-radius: 16px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-main);
+  padding: 2rem 3rem;
   text-align: center;
   display: none;
   pointer-events: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .screen.active {
   display: block;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .screen h2 {
-  font-size: 3rem;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .screen p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
 }
 
 .button {
-  background: #fbc531;
-  color: #2f3640;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 8px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  padding: 0.7rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
-  text-decoration: none;
-  display: inline-block;
+  box-shadow: var(--shadow-main);
+  transition: all 0.1s ease;
 }
 
 .button:hover {
-  background: #e1b12c;
-  transform: translateY(-2px);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--border-color);
 }
 
 .button:active {
-  transform: translateY(1px);
-}
-
-#hud {
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  text-align: center;
-  font-size: 4rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  z-index: 4;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--border-color);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

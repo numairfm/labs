@@ -1,248 +1,265 @@
-/* Brutalist UI Styling for Minesweeper */
+/* ── Minesweeper — Global Theme Compliant ── */
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
 .minesweeper-app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: var(--bg-color, #e0e0e0);
-    color: var(--text-color, #1a1a1a);
-    font-family: 'Courier New', Courier, monospace;
-    margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: var(--surface-color, #ffffff);
-    border-bottom: 4px solid var(--text-color, #1a1a1a);
+/* ── Header ── */
+.ms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  background-color: var(--bg-card);
+  border-bottom: 2px solid var(--border-color);
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
-.header h1 {
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-    margin: 0;
+.ms-header h1 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0;
 }
 
-.btn {
-    background: var(--surface-color, #ffffff);
-    color: var(--text-color, #1a1a1a);
-    border: 3px solid var(--text-color, #1a1a1a);
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 4px 4px 0px var(--text-color, #1a1a1a);
-    transition: all 0.1s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    font-family: inherit;
+/* ── Controls ── */
+.controls-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
-.btn:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0px 0px 0px var(--text-color, #1a1a1a);
+.ms-select {
+  appearance: none;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-main);
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='currentColor' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
 }
 
-.game-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    gap: 2rem;
-    overflow-y: auto;
+.ms-btn {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow-main);
+  transition: all 0.1s ease;
 }
 
-.brutalist-card {
-    background: #c0c0c0;
-    border-top: 4px solid #ffffff;
-    border-left: 4px solid #ffffff;
-    border-right: 4px solid #808080;
-    border-bottom: 4px solid #808080;
-    padding: 1.5rem;
+.ms-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--border-color);
 }
 
-.dashboard {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 600px;
+.ms-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--border-color);
 }
 
-.controls {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+/* ── Stats panel ── */
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.6rem 1.5rem;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--border-color);
+  flex-shrink: 0;
 }
 
-select.btn {
-    appearance: none;
-    padding-right: 2rem;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231a1a1a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem top 50%;
-    background-size: 0.65rem auto;
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
 }
 
-.stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #000;
-    padding: 1rem;
-    border: 4px solid #808080;
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-bottom-color: #ffffff;
-    border-right-color: #ffffff;
+.stat-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 700;
 }
 
-.stat-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.stat-box .label {
-    color: #fff;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-}
-
-.stat-box .value {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #ff0000;
-    background: #330000;
-    padding: 0.2rem 0.5rem;
-    line-height: 1;
-    border: 2px inset #555;
-    min-width: 3ch;
-    text-align: center;
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+  text-align: center;
 }
 
 .face-btn {
-    font-size: 2rem;
-    width: 3.5rem;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #c0c0c0;
-    border-top: 4px solid #ffffff;
-    border-left: 4px solid #ffffff;
-    border-right: 4px solid #808080;
-    border-bottom: 4px solid #808080;
-    cursor: pointer;
-    padding: 0;
+  font-size: 1.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-main);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.face-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--border-color);
 }
 
 .face-btn:active {
-    border-top: 4px solid #808080;
-    border-left: 4px solid #808080;
-    border-right: 4px solid #ffffff;
-    border-bottom: 4px solid #ffffff;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--border-color);
 }
 
-.grid-container {
-    display: flex;
-    justify-content: center;
-    overflow: auto;
-    max-width: 100%;
+/* ── Game Grid ── */
+.game-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 1.5rem;
 }
 
 .minesweeper-grid {
-    display: grid;
-    background: #808080;
-    gap: 1px;
-    border: 3px solid #808080;
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-bottom-color: #ffffff;
-    border-right-color: #ffffff;
+  display: grid;
+  gap: 2px;
+  background: var(--border-color);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-main);
 }
 
+/* Classic Win 3.1 beveled cell look, adapted for global theme colors */
 .cell {
-    width: 30px;
-    height: 30px;
-    background: #c0c0c0;
-    border-top: 3px solid #ffffff;
-    border-left: 3px solid #ffffff;
-    border-right: 3px solid #808080;
-    border-bottom: 3px solid #808080;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    cursor: pointer;
-    user-select: none;
-    box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-secondary);
+  border-top: 3px solid var(--bg-card);
+  border-left: 3px solid var(--bg-card);
+  border-right: 3px solid var(--border-color);
+  border-bottom: 3px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  user-select: none;
+}
+
+.cell:hover:not(.revealed):not(.flagged) {
+  background: var(--bg-card);
 }
 
 .cell:active:not(.revealed):not(.flagged) {
-    border-top: 3px solid #808080;
-    border-left: 3px solid #808080;
-    border-right: 3px solid #c0c0c0;
-    border-bottom: 3px solid #c0c0c0;
+  border-top: 3px solid var(--border-color);
+  border-left: 3px solid var(--border-color);
+  border-right: 3px solid var(--bg-card);
+  border-bottom: 3px solid var(--bg-card);
 }
 
 .cell.revealed {
-    border: 1px solid #808080;
-    background: #e0e0e0;
-    cursor: default;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  cursor: default;
 }
 
-.cell.mine {
-    background-color: red;
+.cell.mine-hit {
+  background: var(--accent-red);
 }
 
 .cell.flagged::after {
-    content: '🚩';
-    font-size: 1rem;
+  content: '🚩';
+  font-size: 0.9rem;
 }
 
-/* Colors for numbers */
-.cell[data-adjacent="1"] { color: #0000ff; }
-.cell[data-adjacent="2"] { color: #008000; }
-.cell[data-adjacent="3"] { color: #ff0000; }
-.cell[data-adjacent="4"] { color: #000080; }
-.cell[data-adjacent="5"] { color: #800000; }
-.cell[data-adjacent="6"] { color: #008080; }
-.cell[data-adjacent="7"] { color: #000000; }
-.cell[data-adjacent="8"] { color: #808080; }
+/* Mine number colors (classic) */
+.cell[data-adjacent="1"] { color: hsl(220, 80%, 50%); }
+.cell[data-adjacent="2"] { color: hsl(140, 60%, 35%); }
+.cell[data-adjacent="3"] { color: var(--accent-red); }
+.cell[data-adjacent="4"] { color: hsl(240, 80%, 35%); }
+.cell[data-adjacent="5"] { color: hsl(0, 60%, 35%); }
+.cell[data-adjacent="6"] { color: hsl(180, 60%, 35%); }
+.cell[data-adjacent="7"] { color: var(--text-primary); }
+.cell[data-adjacent="8"] { color: var(--text-secondary); }
 
-/* Dark Theme Overrides */
-[data-theme="dark"] .minesweeper-app {
-    --bg-color: #121212;
-    --surface-color: #1e1e1e;
-    --text-color: #e0e0e0;
+/* ── Message overlay ── */
+.ms-message {
+  display: none;
+  position: fixed;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  z-index: 50;
 }
 
-[data-theme="dark"] .header {
-    border-bottom-color: #e0e0e0;
+.ms-message.visible {
+  display: flex;
 }
 
-[data-theme="dark"] .btn {
-    background: var(--surface-color);
-    border-color: #e0e0e0;
-    color: #e0e0e0;
-    box-shadow: 4px 4px 0px #e0e0e0;
+.ms-message-inner {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-main);
+  padding: 2.5rem 3rem;
+  text-align: center;
 }
 
-[data-theme="dark"] .btn:active {
-    box-shadow: 0px 0px 0px #e0e0e0;
+.ms-message-inner h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
 
-[data-theme="dark"] select.btn {
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+.ms-message-inner p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
 }
