@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Compressor - Jukebox</title>
+  <title>Image Compressor - JUKEBOX</title>
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
   <link rel="stylesheet" href="./style.css">
@@ -21,42 +21,42 @@
 </head>
 <body class="container">
   <header class="header">
-    <a href="/" class="btn-icon" style="text-decoration: none;" title="Back to Hub">←</a>
-    <h1>Image Compressor</h1>
-    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme">🌓</button>
+    <a href="/" class="btn-icon" style="text-decoration: none; font-weight: 700; line-height: 1;" title="Back to Hub">←</a>
+    <h1 style="letter-spacing: 0.05em;">IMAGE COMPRESSOR</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;">THEME</button>
   </header>
 
   <main class="workspace-wrapper">
     <div id="drop-area" class="drop-area card card-glass">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
-      <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Drag and drop files here, or click to upload</p>
-      <p style="font-size: 0.875rem; color: var(--text-secondary);">Supports PNG and JPEG formats</p>
+      <div style="font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 1rem;">[ FILE DROP ]</div>
+      <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase;">Drag and drop files here, or click to upload</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); letter-spacing: 0.05em; text-transform: uppercase;">Supports PNG and JPEG formats</p>
       <input type="file" id="file-selector" accept="image/png, image/jpeg" style="display: none;">
     </div>
 
     <div id="preview-panel" class="preview-panel card card-glass" style="display: none;">
       <div class="control-box">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <label for="quality-slider" style="font-weight: 600;">Compression Quality: <span id="quality-display" class="badge badge-blue">80%</span></label>
+          <label for="quality-slider" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.9rem;">Compression Quality: <span id="quality-display" class="badge badge-blue">80%</span></label>
         </div>
-        <input type="range" id="quality-slider" min="10" max="100" value="80" style="margin-top: 0.5rem;">
+        <input type="range" id="quality-slider" min="10" max="100" value="80" style="margin-top: 0.75rem;">
       </div>
 
       <div class="result-grid">
         <div class="result-card card">
-          <h4 style="color: var(--text-secondary);">Original Image</h4>
+          <h4 style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.85rem;">Original Image</h4>
           <div class="image-wrapper"><img id="orig-img" src="" alt="Original image"></div>
           <p id="orig-info" class="badge badge-teal">Size: 0 KB</p>
         </div>
         <div class="result-card card">
-          <h4 style="color: var(--text-secondary);">Optimized Image</h4>
+          <h4 style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.85rem;">Optimized Image</h4>
           <div class="image-wrapper"><img id="opt-img" src="" alt="Optimized image"></div>
           <p id="opt-info" class="badge badge-blue">Size: 0 KB (Saved: 0%)</p>
         </div>
       </div>
 
-      <button id="download-btn" class="btn btn-primary" style="align-self: center; margin-top: 1rem; padding: 0.75rem 2.5rem; border-radius: 30px;">
-        Download Compressed Image
+      <button id="download-btn" class="btn btn-primary" style="align-self: center; margin-top: 1.5rem; padding: 0.75rem 2.5rem;">
+        DOWNLOAD COMPRESSED IMAGE
       </button>
     </div>
   </main>

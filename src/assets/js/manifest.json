@@ -4,7 +4,7 @@
     "name": "Image Compressor",
     "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",
     "category": "Media",
-    "icon": "🖼️",
+    "icon": "[IMG]",
     "tags": [
       "image",
       "compress",
@@ -20,7 +20,7 @@
     "name": "Unit Converter & Calculator",
     "description": "Fast size, digital data, length, and temperature conversions instantly as you type.",
     "category": "Utilities",
-    "icon": "🔢",
+    "icon": "[NUM]",
     "tags": [
       "unit",
       "convert",

@@ -1,15 +1,15 @@
-/* Premium Components & Layout Library */
+/* Premium Minimalist Boutique Components Library */
 
-/* Premium Glassmorphic Cards */
+/* Square Minimalist Cards with Thicker Borders */
 .card {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+  padding: 1.75rem;
   box-shadow: var(--shadow-main);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.15s ease;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -21,23 +21,28 @@
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-  border-color: var(--accent-blue);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--border-color);
+  background-color: var(--bg-secondary);
 }
 
-/* Glassmorphic Special Card variant */
+.card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+/* Glassmorphic Special Card variant - Simplified to matching minimalist theme */
 .card-glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 0;
 }
 
 .card h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   color: var(--text-primary);
+  font-family: var(--font-heading);
 }
 
 .card p {
@@ -46,23 +51,23 @@
   line-height: 1.5;
 }
 
-/* Shared Navigation Headers */
+/* Shared Navigation Headers - Emphasizing Jukebox logo and clean links */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 3rem;
 }
 
 .header h1 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-heading);
+  color: var(--text-primary);
 }
 
 /* Base Buttons */
@@ -74,28 +79,30 @@
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 600;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s ease;
   text-decoration: none;
-  border: 1px solid transparent;
+  border: 2px solid var(--border-color);
+  box-shadow: 2px 2px 0px var(--border-color);
 }
 
 /* Primary Button */
 .btn-primary {
   background-color: var(--accent-blue);
   color: #ffffff;
+  border-color: var(--border-color);
 }
 
 .btn-primary:hover {
-  background-color: hsl(230, 75%, 55%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-blue) 30%, transparent);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-color);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--border-color);
 }
 
 /* Secondary Button */
@@ -107,35 +114,39 @@
 
 .btn-secondary:hover {
   background-color: var(--border-color);
-  border-color: var(--text-secondary);
-  transform: translateY(-1px);
+  color: var(--bg-primary);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-color);
 }
 
 /* Clean Theme Control & Icon Buttons */
 .btn-icon {
-  background: none;
-  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
   color: var(--text-primary);
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 8px;
+  border-radius: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  width: 40px;
-  height: 40px;
-  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 44px;
+  height: 44px;
+  box-shadow: 2px 2px 0px var(--border-color);
+  transition: all 0.1s ease;
 }
 
 .btn-icon:hover {
   background-color: var(--bg-secondary);
-  border-color: var(--text-secondary);
-  transform: scale(1.05);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-color);
 }
 
 .btn-icon:active {
-  transform: scale(0.95);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--border-color);
 }
 
 /* Premium Text Inputs */
@@ -147,52 +158,57 @@
 }
 
 .input-label {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--text-secondary);
 }
 
 .text-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: 0;
+  border: 2px solid var(--border-color);
   background-color: var(--bg-card);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.95rem;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .text-input:focus {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  outline: none;
 }
 
-/* Badges & Indicators */
+/* Minimalist Badges & Indicators - Thick & Square */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   width: fit-content;
+  border: 2px solid var(--border-color);
 }
 
 .badge-teal {
-  background-color: color-mix(in srgb, var(--accent-teal) 10%, transparent);
-  color: var(--accent-teal);
+  background-color: var(--accent-teal);
+  color: #ffffff;
 }
 
 .badge-blue {
-  background-color: color-mix(in srgb, var(--accent-blue) 10%, transparent);
-  color: var(--accent-blue);
+  background-color: var(--accent-blue);
+  color: #ffffff;
 }
 
 .badge-red {
-  background-color: color-mix(in srgb, var(--accent-red) 10%, transparent);
-  color: var(--accent-red);
+  background-color: var(--accent-red);
+  color: #ffffff;
 }
 
 /* Dashboard Layout Grid */
@@ -203,27 +219,12 @@
   margin-top: 1.5rem;
 }
 
-/* Animated Underline Effect for Links */
+/* Animated Underline Effect for Links - Removed (Too flashy/AI-like, replaced with solid borders) */
 .hover-underline {
-  position: relative;
   text-decoration: none;
   color: inherit;
 }
-
-.hover-underline::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: var(--accent-blue);
-  transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
-}
-
-.hover-underline:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
+.hover-underline:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

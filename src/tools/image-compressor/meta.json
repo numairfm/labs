@@ -2,7 +2,7 @@
   "name": "Image Compressor",
   "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",
   "category": "Media",
-  "icon": "🖼️",
+  "icon": "[IMG]",
   "tags": ["image", "compress", "png", "jpeg", "optimize"],
   "author": "Numair",
   "version": "1.0.0"

@@ -2,7 +2,7 @@
   "name": "Unit Converter & Calculator",
   "description": "Fast size, digital data, length, and temperature conversions instantly as you type.",
   "category": "Utilities",
-  "icon": "🔢",
+  "icon": "[NUM]",
   "tags": ["unit", "convert", "calculator", "bytes", "metric"],
   "author": "Numair",
   "version": "1.0.0"

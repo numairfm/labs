@@ -4,8 +4,8 @@
 
 .converter-box {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 0;
   padding: 2rem;
   box-shadow: var(--shadow-main);
   display: flex;
@@ -22,13 +22,15 @@
 .select-input, .num-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  border-radius: 8px;
+  border-radius: 0;
+  font-family: var(--font-sans);
   font-size: 1rem;
+  font-weight: 500;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.15s ease;
 }
 
 .select-input:focus, .num-input:focus {
@@ -48,12 +50,14 @@
 }
 
 .io-card {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 0;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  background-color: var(--bg-card);
+  box-shadow: none; /* simple card inside grid */
 }
 
 .readonly-input {

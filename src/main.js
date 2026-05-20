@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Replace emojis with clean modern typographic symbols
+  function getCleanSymbol(icon, category) {
+    if (icon === '🖼️' || category === 'Media') return '[IMG]';
+    if (icon === '🔢' || category === 'Utilities') return '[NUM]';
+    return '[*]';
+  }
+
   // 2. Render Cards Loop
   function renderTools() {
     if (!toolsGrid) return;
@@ -49,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       toolsGrid.innerHTML = `
         <div class="empty-state">
-          <p>No tools matched your query.</p>
+          <p>No tools match the query.</p>
         </div>
       `;
       return;
@@ -57,14 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filtered.forEach(tool => {
       const card = document.createElement('a');
-      card.className = 'card card-glass';
+      card.className = 'card';
       card.href = `./tools/${tool.id}/index.html`;
 
-      // Visual layout matching premium glassmorphic cards
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
           <span class="badge ${getBadgeClass(tool.category)}">${tool.category}</span>
-          <span style="font-size: 1.25rem;">${tool.icon || '🛠️'}</span>
+          <span style="font-family: var(--font-sans); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-secondary);">${getCleanSymbol(tool.icon, tool.category)}</span>
         </div>
         <h3>${tool.name}</h3>
         <p>${tool.description}</p>

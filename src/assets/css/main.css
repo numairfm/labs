@@ -1,76 +1,77 @@
-/* Import Google Font 'Inter' */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap');
+/* Import Premium Custom Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Theme Light System */
-  --bg-primary: hsl(0, 0%, 98%);
-  --bg-secondary: hsl(0, 0%, 93%);
-  --bg-card: hsl(0, 0%, 100%);
-  --border-color: hsl(0, 0%, 90%);
-  --text-primary: hsl(0, 0%, 15%);
-  --text-secondary: hsl(0, 0%, 45%);
+  /* Theme Light System - Clean Warm Paper / Minimalist Gallery */
+  --bg-primary: hsl(30, 20%, 96%);
+  --bg-secondary: hsl(30, 15%, 90%);
+  --bg-card: hsl(30, 25%, 98%);
+  --border-color: hsl(0, 0%, 10%);
+  --text-primary: hsl(0, 0%, 8%);
+  --text-secondary: hsl(0, 0%, 35%);
   
-  --accent-blue: hsl(230, 75%, 60%);
-  --accent-teal: hsl(160, 75%, 45%);
-  --accent-red: hsl(0, 75%, 60%);
-  --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
+  /* Accent Colors - High Contrast Minimalist Boutique */
+  --accent-blue: hsl(14, 85%, 45%); /* Warm Rust Orange */
+  --accent-teal: hsl(42, 60%, 40%); /* Warm Antique Gold */
+  --accent-red: hsl(0, 60%, 45%);   /* Warm Terracotta Red */
+  --shadow-main: 3px 3px 0px hsl(0, 0%, 10%); /* Hard Solid Offset Shadow */
   
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Playfair Display', serif;
   
-  /* Modern Web Guidance: Viewport-wide dark mode support and custom scrollbars */
   color-scheme: light dark;
   accent-color: var(--accent-blue);
   
-  /* Glassmorphism token defaults */
-  --blur-amount: 12px;
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  /* Glassmorphism/Card token defaults (Cleaned up, solid minimalist style) */
+  --blur-amount: 0px;
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-color);
 }
 
 /* System Dark Mode Auto-Detection Fallback */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg-primary: hsl(220, 15%, 8%);
-    --bg-secondary: hsl(220, 15%, 12%);
-    --bg-card: hsl(220, 15%, 15%);
-    --border-color: hsl(220, 10%, 20%);
-    --text-primary: hsl(220, 15%, 90%);
-    --text-secondary: hsl(220, 10%, 65%);
+    /* Theme Dark System - Premium Warm Charcoal / Obsidian */
+    --bg-primary: hsl(20, 10%, 6%);
+    --bg-secondary: hsl(20, 10%, 12%);
+    --bg-card: hsl(20, 10%, 9%);
+    --border-color: hsl(20, 5%, 22%);
+    --text-primary: hsl(30, 20%, 94%);
+    --text-secondary: hsl(30, 10%, 65%);
     
-    --shadow-main: 0 4px 30px rgba(0, 0, 0, 0.3);
-    --glass-bg: rgba(20, 24, 33, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --shadow-main: 4px 4px 0px hsl(0, 0%, 0%);
+    --glass-bg: var(--bg-card);
+    --glass-border: var(--border-color);
   }
 }
 
 /* Manual Theme Overrides via JS Toggle */
 [data-theme="dark"] {
-  --bg-primary: hsl(220, 15%, 8%);
-  --bg-secondary: hsl(220, 15%, 12%);
-  --bg-card: hsl(220, 15%, 15%);
-  --border-color: hsl(220, 10%, 20%);
-  --text-primary: hsl(220, 15%, 90%);
-  --text-secondary: hsl(220, 10%, 65%);
+  --bg-primary: hsl(20, 10%, 6%);
+  --bg-secondary: hsl(20, 10%, 12%);
+  --bg-card: hsl(20, 10%, 9%);
+  --border-color: hsl(20, 5%, 22%);
+  --text-primary: hsl(30, 20%, 94%);
+  --text-secondary: hsl(30, 10%, 65%);
   
-  --shadow-main: 0 4px 30px rgba(0, 0, 0, 0.3);
-  --glass-bg: rgba(20, 24, 33, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --shadow-main: 4px 4px 0px hsl(0, 0%, 0%);
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-color);
   
   color-scheme: dark;
 }
 
 [data-theme="light"] {
-  --bg-primary: hsl(0, 0%, 98%);
-  --bg-secondary: hsl(0, 0%, 93%);
-  --bg-card: hsl(0, 0%, 100%);
-  --border-color: hsl(0, 0%, 90%);
-  --text-primary: hsl(0, 0%, 15%);
-  --text-secondary: hsl(0, 0%, 45%);
+  --bg-primary: hsl(30, 20%, 96%);
+  --bg-secondary: hsl(30, 15%, 90%);
+  --bg-card: hsl(30, 25%, 98%);
+  --border-color: hsl(0, 0%, 10%);
+  --text-primary: hsl(0, 0%, 8%);
+  --text-secondary: hsl(0, 0%, 35%);
   
-  --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --shadow-main: 3px 3px 0px hsl(0, 0%, 10%);
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-color);
   
   color-scheme: light;
 }
@@ -83,7 +84,7 @@
 }
 
 body, .card, .btn, .glass-panel, .text-input, select, textarea {
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 body {
@@ -95,63 +96,60 @@ body {
   min-height: 100vh;
 }
 
-/* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
 
 /* Typography Bindings */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--text-primary);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
-h1 { font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem); }
-h2 { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem); }
-h3 { font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.6rem); }
+h1 { font-size: clamp(2.5rem, 2rem + 3vw, 4rem); }
+h2 { font-size: clamp(1.8rem, 1.4rem + 2vw, 2.8rem); }
+h3 { font-size: clamp(1.35rem, 1.2rem + 1vw, 1.85rem); }
 
 /* Utility Focus States */
 button:focus-visible, 
 input:focus-visible, 
 select:focus-visible, 
 textarea:focus-visible {
-  outline: 2px solid var(--accent-blue);
+  outline: 2px solid var(--text-primary);
   outline-offset: 4px;
 }
 
-/* Glassmorphism Glass Panel Utility */
+/* Minimalist Solid Panel Utility */
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
 }
 
-/* Custom Scrollbar custom design - degrading gracefully */
+/* Custom Scrollbar - Minimalist */
 :root {
-  --scrollbar-track: light-dark(#eee, #222);
-  --scrollbar-thumb: light-dark(#ccc, #444);
+  --scrollbar-track: light-dark(hsl(30, 20%, 96%), hsl(20, 10%, 6%));
+  --scrollbar-thumb: light-dark(hsl(0, 0%, 10%), hsl(30, 20%, 94%));
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 @supports not (scrollbar-color: auto) {
   body::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
   body::-webkit-scrollbar-track {
     background: var(--scrollbar-track);
   }
   body::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
-    border-radius: 5px;
+    border-radius: 0;
   }
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit Converter - Jukebox</title>
+  <title>Unit Converter - JUKEBOX</title>
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
   <link rel="stylesheet" href="./style.css">
@@ -21,9 +21,9 @@
 </head>
 <body class="container">
   <header class="header">
-    <a href="/" class="btn-icon" style="text-decoration: none;" title="Back to Hub">←</a>
-    <h1>Unit Converter & Calculator</h1>
-    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme">🌓</button>
+    <a href="/" class="btn-icon" style="text-decoration: none; font-weight: 700; line-height: 1;" title="Back to Hub">←</a>
+    <h1 style="letter-spacing: 0.05em;">UNIT CONVERTER</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;">THEME</button>
   </header>
 
   <main class="workspace-wrapper">
@@ -41,13 +41,13 @@
         <div class="io-card card">
           <label for="input-value" class="input-label">From</label>
           <input type="number" id="input-value" value="1" class="num-input text-input">
-          <select id="input-unit" class="select-input"></select>
+          <select id="input-unit" class="select-input" style="margin-top: 0.5rem;"></select>
         </div>
 
         <div class="io-card card">
           <label for="output-value" class="input-label">To</label>
           <input type="number" id="output-value" readonly class="num-input readonly-input text-input">
-          <select id="output-unit" class="select-input"></select>
+          <select id="output-unit" class="select-input" style="margin-top: 0.5rem;"></select>
         </div>
       </div>
     </div>
