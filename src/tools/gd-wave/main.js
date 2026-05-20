@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
   
+  const playUI = document.getElementById('play-ui');
+  const btnToggleHitboxes = document.getElementById('btn-toggle-hitboxes');
+  const btnReturnEditor = document.getElementById('btn-return-editor');
+
   const editorUI = document.getElementById('editor-ui');
   const btnToggleMode = document.getElementById('btn-toggle-mode');
   const toolBtns = document.querySelectorAll('.tool-btn');
@@ -19,18 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- ENGINE CONSTANTS & STATE ---
   const GRID_SIZE = 40;
   const WAVE_SPEED_X = 400; // pixels per second
-  const WAVE_SPEED_Y = 400; // diagonal means Y speed = X speed
   const FORGIVENESS_MARGIN = 6; // Hitbox reduction for forgiving gameplay
+  const CEILING_Y = 0;
+  const FLOOR_Y = 15 * GRID_SIZE; // 600px
 
   let mode = 'edit'; // 'edit' or 'play'
   let state = 'playing'; // 'playing' or 'crashed'
+  let showHitboxes = false;
   
   let camera = { x: 0, y: 0 };
   let player = {
     x: 200,
-    y: 0,
+    y: FLOOR_Y / 2,
     size: 16, // Visual size of wave triangle
     isHolding: false,
+    isMini: false,
     trail: []
   };
 
@@ -48,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
     if (mode === 'edit') {
       // Center camera vertically on resize
-      camera.y = -canvas.height / 2;
+      camera.y = -(canvas.height / 2 - FLOOR_Y/2);
     }
   }
   window.addEventListener('resize', resize);
@@ -63,37 +70,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  btnToggleMode.addEventListener('click', () => {
-    if (mode === 'edit') {
-      // Switch to Play
-      mode = 'play';
-      state = 'playing';
-      btnToggleMode.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg> STOP PLAYING';
-      btnToggleMode.classList.replace('primary', 'outline');
-      editorUI.classList.add('hidden'); // Hide editor tools during play
-      
-      // Setup Player Start
-      player.x = 200;
-      player.y = canvas.height / 2;
-      player.isHolding = false;
-      player.trail = [{x: player.x, y: player.y}];
-      camera.x = 0;
-      camera.y = 0; // Lock camera
-      crashOverlay.style.display = 'none';
-      
-    } else {
-      // Switch to Edit
-      mode = 'edit';
-      btnToggleMode.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> PLAY LEVEL';
-      btnToggleMode.classList.replace('outline', 'primary');
-      editorUI.classList.remove('hidden');
-      crashOverlay.style.display = 'none';
-      
-      // Reset Camera for Edit
-      camera.x = 0;
-      camera.y = -canvas.height / 2;
-    }
+  btnToggleHitboxes.addEventListener('click', () => {
+    showHitboxes = !showHitboxes;
+    btnToggleHitboxes.classList.toggle('primary');
+    btnToggleHitboxes.classList.toggle('outline');
   });
+
+  function startPlayMode() {
+    mode = 'play';
+    state = 'playing';
+    editorUI.classList.add('hidden');
+    playUI.style.display = 'flex';
+    
+    player.x = 200;
+    player.y = FLOOR_Y / 2;
+    player.isHolding = false;
+    player.isMini = false;
+    player.trail = [{x: player.x, y: player.y}];
+    camera.x = 0;
+    camera.y = 0; // Lock camera to borders
+    crashOverlay.style.display = 'none';
+  }
+
+  function startEditMode() {
+    mode = 'edit';
+    editorUI.classList.remove('hidden');
+    playUI.style.display = 'none';
+    crashOverlay.style.display = 'none';
+    
+    // Reset Camera for Edit
+    camera.x = 0;
+    camera.y = -(canvas.height / 2 - FLOOR_Y/2);
+  }
+
+  btnToggleMode.addEventListener('click', startPlayMode);
+  btnReturnEditor.addEventListener('click', startEditMode);
 
   // Export / Import JSON
   btnExport.addEventListener('click', () => {
@@ -122,26 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- INPUT HANDLING ---
   
-  // Track panning in edit mode
   let panStart = { x: 0, y: 0, camX: 0, camY: 0 };
   let isPanning = false;
 
   canvas.addEventListener('pointerdown', (e) => {
     if (mode === 'play') {
       if (state === 'crashed') {
-        // Restart level
-        state = 'playing';
-        player.x = 200;
-        player.y = canvas.height / 2;
-        player.trail = [{x: player.x, y: player.y}];
-        camera.x = 0;
-        crashOverlay.style.display = 'none';
+        startPlayMode(); // restart
       } else {
         player.isHolding = true;
       }
     } else {
-      // Edit Mode
-      if (e.button === 1 || (e.button === 0 && e.shiftKey)) { // Middle click or Shift+Left to pan
+      if (e.button === 1 || (e.button === 0 && e.shiftKey)) { 
         isPanning = true;
         panStart = { x: e.clientX, y: e.clientY, camX: camera.x, camY: camera.y };
       } else if (e.button === 0) {
@@ -171,18 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
     lastDrawCell = { x: -1, y: -1 };
   });
 
-  // Keyboard input for Play mode
   window.addEventListener('keydown', (e) => {
     if (e.code === 'Space' && mode === 'play') {
       e.preventDefault();
       if (state === 'crashed') {
-        // Restart level
-        state = 'playing';
-        player.x = 200;
-        player.y = canvas.height / 2;
-        player.trail = [{x: player.x, y: player.y}];
-        camera.x = 0;
-        crashOverlay.style.display = 'none';
+        startPlayMode();
       } else {
         player.isHolding = true;
       }
@@ -195,21 +191,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- EDITOR LOGIC ---
   function handleEditorAction(clientX, clientY) {
-    // Convert screen coordinates to world coordinates
     const worldX = clientX + camera.x;
     const worldY = clientY + camera.y;
 
-    // Convert to grid cell
     const cellX = Math.floor(worldX / GRID_SIZE);
     const cellY = Math.floor(worldY / GRID_SIZE);
 
-    if (cellX === lastDrawCell.x && cellY === lastDrawCell.y) return; // Prevent duplicate work
+    if (cellX === lastDrawCell.x && cellY === lastDrawCell.y) return; 
     lastDrawCell = { x: cellX, y: cellY };
 
-    // Remove existing object at this cell
+    // Remove existing
     levelData = levelData.filter(obj => !(obj.x === cellX && obj.y === cellY));
 
-    // Place new object if not eraser
     if (currentTool !== 'eraser') {
       levelData.push({
         type: currentTool,
@@ -221,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- PHYSICS ENGINE ---
 
-  // Check if a point is inside a triangle (A, B, C)
   function ptInTriangle(p, p0, p1, p2) {
     const A = 1/2 * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
     const sign = A < 0 ? -1 : 1;
@@ -230,15 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return s > 0 && t > 0 && (s + t) < 2 * A * sign;
   }
 
+  // Exposed for rendering hitboxes
+  let currentHitboxes = [];
+
   function checkCollisions() {
-    // Player world boundaries
+    currentHitboxes = [];
+    player.size = player.isMini ? 8 : 16;
     const halfSize = player.size / 2;
-    // We apply forgiveness margin to the player size for AABB vs AABB checks
     const px = player.x;
     const py = player.y;
     const pm = FORGIVENESS_MARGIN; 
     
-    // Player AABB with margin
     const pBox = {
       left: px - halfSize + pm,
       right: px + halfSize - pm,
@@ -246,37 +240,56 @@ document.addEventListener('DOMContentLoaded', () => {
       bottom: py + halfSize - pm
     };
 
-    // Check floor/ceiling crash
-    if (py > canvas.height || py < 0) return true;
+    currentHitboxes.push({ type: 'aabb', box: pBox, color: 'lime' });
+
+    let isCrashed = false;
+
+    // Apply borders
+    if (player.y <= CEILING_Y) {
+      player.y = CEILING_Y;
+      player.trail[player.trail.length - 1].y = CEILING_Y;
+    }
+    if (player.y >= FLOOR_Y) {
+      player.y = FLOOR_Y;
+      player.trail[player.trail.length - 1].y = FLOOR_Y;
+    }
 
     for (let obj of levelData) {
-      // Calculate object world position
       const ox = obj.x * GRID_SIZE;
       const oy = obj.y * GRID_SIZE;
       
-      // Skip if completely out of player X range
-      if (ox > px + 100 || ox + GRID_SIZE < px - 100) continue;
+      if (ox > px + 100 || ox + GRID_SIZE * 2 < px - 100) continue;
+
+      if (obj.type === 'portal-normal' || obj.type === 'portal-mini') {
+        const pRect = { left: ox + 14, right: ox + 26, top: oy, bottom: oy + GRID_SIZE };
+        if (pBox.left < pRect.right && pBox.right > pRect.left && pBox.top < pRect.bottom && pBox.bottom > pRect.top) {
+          if (obj.type === 'portal-normal') player.isMini = false;
+          if (obj.type === 'portal-mini') player.isMini = true;
+        }
+        currentHitboxes.push({ type: 'aabb', box: pRect, color: 'purple' });
+        continue;
+      }
+
+      const gm = pm; // Forgiving margin
 
       if (obj.type === 'block') {
         const oBox = {
-          left: ox + pm,
-          right: ox + GRID_SIZE - pm,
-          top: oy + pm,
-          bottom: oy + GRID_SIZE - pm
+          left: ox + gm,
+          right: ox + GRID_SIZE - gm,
+          top: oy + gm,
+          bottom: oy + GRID_SIZE - gm
         };
-        // AABB check
+        currentHitboxes.push({ type: 'aabb', box: oBox, color: 'red' });
         if (pBox.left < oBox.right && pBox.right > oBox.left && pBox.top < oBox.bottom && pBox.bottom > oBox.top) {
-          return true;
+          isCrashed = true;
         }
       } 
       else if (obj.type.startsWith('spike')) {
-        // Build spike triangle
         let p0, p1, p2;
-        const gm = pm; // Forgiving margin for spike
         if (obj.type === 'spike-up') {
-          p0 = { x: ox + GRID_SIZE/2, y: oy + gm }; // Tip
-          p1 = { x: ox + gm, y: oy + GRID_SIZE - gm }; // Bottom left
-          p2 = { x: ox + GRID_SIZE - gm, y: oy + GRID_SIZE - gm }; // Bottom right
+          p0 = { x: ox + GRID_SIZE/2, y: oy + gm }; 
+          p1 = { x: ox + gm, y: oy + GRID_SIZE - gm }; 
+          p2 = { x: ox + GRID_SIZE - gm, y: oy + GRID_SIZE - gm }; 
         } else if (obj.type === 'spike-down') {
           p0 = { x: ox + GRID_SIZE/2, y: oy + GRID_SIZE - gm };
           p1 = { x: ox + gm, y: oy + gm };
@@ -290,23 +303,32 @@ document.addEventListener('DOMContentLoaded', () => {
           p1 = { x: ox + gm, y: oy + gm };
           p2 = { x: ox + gm, y: oy + GRID_SIZE - gm };
         }
-
-        // Simplistic check: Check if player center is in triangle (very forgiving), 
-        // and check if player AABB corners are in triangle.
-        const corners = [
-          {x: pBox.left, y: pBox.top},
-          {x: pBox.right, y: pBox.top},
-          {x: pBox.left, y: pBox.bottom},
-          {x: pBox.right, y: pBox.bottom},
-          {x: px, y: py}
-        ];
-        
-        for (let corner of corners) {
-          if (ptInTriangle(corner, p0, p1, p2)) return true;
-        }
+        currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
+        const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
+        for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
+      }
+      else if (obj.type.startsWith('slope')) {
+        let p0, p1, p2;
+        if (obj.type === 'slope-bl') { p0 = {x: ox+gm, y: oy+GRID_SIZE-gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; p2 = {x: ox+gm, y: oy+gm}; }
+        else if (obj.type === 'slope-br') { p0 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; p1 = {x: ox+gm, y: oy+GRID_SIZE-gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+gm}; }
+        else if (obj.type === 'slope-tl') { p0 = {x: ox+gm, y: oy+gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+gm}; p2 = {x: ox+gm, y: oy+GRID_SIZE-gm}; }
+        else if (obj.type === 'slope-tr') { p0 = {x: ox+GRID_SIZE-gm, y: oy+gm}; p1 = {x: ox+gm, y: oy+gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; }
+        currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
+        const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
+        for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
+      }
+      else if (obj.type.startsWith('steep')) {
+        let p0, p1, p2;
+        if (obj.type === 'steep-bl') { p0 = {x: ox+gm, y: oy+(GRID_SIZE*2)-gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy+(GRID_SIZE*2)-gm}; p2 = {x: ox+gm, y: oy+gm}; }
+        else if (obj.type === 'steep-br') { p0 = {x: ox+GRID_SIZE-gm, y: oy+(GRID_SIZE*2)-gm}; p1 = {x: ox+gm, y: oy+(GRID_SIZE*2)-gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+gm}; }
+        else if (obj.type === 'steep-tl') { p0 = {x: ox+gm, y: oy-GRID_SIZE+gm}; p1 = {x: ox+GRID_SIZE-gm, y: oy-GRID_SIZE+gm}; p2 = {x: ox+gm, y: oy+GRID_SIZE-gm}; }
+        else if (obj.type === 'steep-tr') { p0 = {x: ox+GRID_SIZE-gm, y: oy-GRID_SIZE+gm}; p1 = {x: ox+gm, y: oy-GRID_SIZE+gm}; p2 = {x: ox+GRID_SIZE-gm, y: oy+GRID_SIZE-gm}; }
+        currentHitboxes.push({ type: 'triangle', p0, p1, p2, color: 'red' });
+        const corners = [{x: pBox.left, y: pBox.top}, {x: pBox.right, y: pBox.top}, {x: pBox.left, y: pBox.bottom}, {x: pBox.right, y: pBox.bottom}, {x: px, y: py}];
+        for (let c of corners) if (ptInTriangle(c, p0, p1, p2)) isCrashed = true;
       }
     }
-    return false;
+    return isCrashed;
   }
 
   // --- RENDERING ENGINE ---
@@ -318,37 +340,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const startY = Math.floor(camera.y / GRID_SIZE) * GRID_SIZE;
     
     ctx.beginPath();
-    // Vertical lines
     for (let x = startX; x < camera.x + canvas.width; x += GRID_SIZE) {
       ctx.moveTo(x - camera.x, 0);
       ctx.lineTo(x - camera.x, canvas.height);
     }
-    // Horizontal lines
     for (let y = startY; y < camera.y + canvas.height; y += GRID_SIZE) {
       ctx.moveTo(0, y - camera.y);
       ctx.lineTo(canvas.width, y - camera.y);
     }
     ctx.stroke();
-
-    // Center line highlight
-    if (mode === 'edit') {
-      ctx.strokeStyle = 'rgba(100, 150, 255, 0.2)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(0, -camera.y);
-      ctx.lineTo(canvas.width, -camera.y);
-      ctx.stroke();
-    }
   }
 
   function drawLevel() {
+    // Draw Borders
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, CEILING_Y - camera.y); // Ceiling
+    ctx.fillRect(0, FLOOR_Y - camera.y, canvas.width, canvas.height - (FLOOR_Y - camera.y)); // Floor
+    
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, CEILING_Y - camera.y); ctx.lineTo(canvas.width, CEILING_Y - camera.y);
+    ctx.moveTo(0, FLOOR_Y - camera.y); ctx.lineTo(canvas.width, FLOOR_Y - camera.y);
+    ctx.stroke();
+
     for (let obj of levelData) {
       const screenX = (obj.x * GRID_SIZE) - camera.x;
       const screenY = (obj.y * GRID_SIZE) - camera.y;
 
-      // Frustum culling
-      if (screenX + GRID_SIZE < 0 || screenX > canvas.width) continue;
-      if (screenY + GRID_SIZE < 0 || screenY > canvas.height) continue;
+      if (screenX + GRID_SIZE * 2 < 0 || screenX > canvas.width) continue;
+      if (screenY + GRID_SIZE * 2 < 0 || screenY > canvas.height) continue;
 
       if (obj.type === 'block') {
         ctx.fillStyle = '#fff';
@@ -360,32 +381,42 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (obj.type.startsWith('spike')) {
         ctx.fillStyle = '#fff';
         ctx.beginPath();
-        if (obj.type === 'spike-up') {
-          ctx.moveTo(screenX + GRID_SIZE/2, screenY);
-          ctx.lineTo(screenX, screenY + GRID_SIZE);
-          ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE);
-        } else if (obj.type === 'spike-down') {
-          ctx.moveTo(screenX + GRID_SIZE/2, screenY + GRID_SIZE);
-          ctx.lineTo(screenX, screenY);
-          ctx.lineTo(screenX + GRID_SIZE, screenY);
-        } else if (obj.type === 'spike-left') {
-          ctx.moveTo(screenX, screenY + GRID_SIZE/2);
-          ctx.lineTo(screenX + GRID_SIZE, screenY);
-          ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE);
-        } else if (obj.type === 'spike-right') {
-          ctx.moveTo(screenX + GRID_SIZE, screenY + GRID_SIZE/2);
-          ctx.lineTo(screenX, screenY);
-          ctx.lineTo(screenX, screenY + GRID_SIZE);
-        }
-        ctx.fill();
-        ctx.closePath();
+        if (obj.type === 'spike-up') { ctx.moveTo(screenX + GRID_SIZE/2, screenY); ctx.lineTo(screenX, screenY + GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); } 
+        else if (obj.type === 'spike-down') { ctx.moveTo(screenX + GRID_SIZE/2, screenY + GRID_SIZE); ctx.lineTo(screenX, screenY); ctx.lineTo(screenX + GRID_SIZE, screenY); } 
+        else if (obj.type === 'spike-left') { ctx.moveTo(screenX, screenY + GRID_SIZE/2); ctx.lineTo(screenX + GRID_SIZE, screenY); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); } 
+        else if (obj.type === 'spike-right') { ctx.moveTo(screenX + GRID_SIZE, screenY + GRID_SIZE/2); ctx.lineTo(screenX, screenY); ctx.lineTo(screenX, screenY + GRID_SIZE); }
+        ctx.fill(); ctx.closePath();
+      }
+      else if (obj.type.startsWith('slope')) {
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        if (obj.type === 'slope-bl') { ctx.moveTo(screenX, screenY + GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); ctx.lineTo(screenX, screenY); }
+        else if (obj.type === 'slope-br') { ctx.moveTo(screenX + GRID_SIZE, screenY + GRID_SIZE); ctx.lineTo(screenX, screenY + GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY); }
+        else if (obj.type === 'slope-tl') { ctx.moveTo(screenX, screenY); ctx.lineTo(screenX + GRID_SIZE, screenY); ctx.lineTo(screenX, screenY + GRID_SIZE); }
+        else if (obj.type === 'slope-tr') { ctx.moveTo(screenX + GRID_SIZE, screenY); ctx.lineTo(screenX, screenY); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); }
+        ctx.fill(); ctx.closePath();
+      }
+      else if (obj.type.startsWith('steep')) {
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        if (obj.type === 'steep-bl') { ctx.moveTo(screenX, screenY + GRID_SIZE*2); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE*2); ctx.lineTo(screenX, screenY); }
+        else if (obj.type === 'steep-br') { ctx.moveTo(screenX + GRID_SIZE, screenY + GRID_SIZE*2); ctx.lineTo(screenX, screenY + GRID_SIZE*2); ctx.lineTo(screenX + GRID_SIZE, screenY); }
+        else if (obj.type === 'steep-tl') { ctx.moveTo(screenX, screenY - GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY - GRID_SIZE); ctx.lineTo(screenX, screenY + GRID_SIZE); }
+        else if (obj.type === 'steep-tr') { ctx.moveTo(screenX + GRID_SIZE, screenY - GRID_SIZE); ctx.lineTo(screenX, screenY - GRID_SIZE); ctx.lineTo(screenX + GRID_SIZE, screenY + GRID_SIZE); }
+        ctx.fill(); ctx.closePath();
+      }
+      else if (obj.type.startsWith('portal')) {
+        ctx.strokeStyle = obj.type === 'portal-mini' ? '#c084fc' : '#4ade80';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.ellipse(screenX + GRID_SIZE/2, screenY + GRID_SIZE/2, 12, GRID_SIZE/2, 0, 0, Math.PI * 2);
+        ctx.stroke();
       }
     }
   }
 
   function drawPlayer() {
-    // Draw trail
-    ctx.strokeStyle = 'rgba(100, 150, 255, 0.6)';
+    ctx.strokeStyle = player.isMini ? 'rgba(192, 132, 252, 0.6)' : 'rgba(100, 150, 255, 0.6)';
     ctx.lineWidth = 4;
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -397,17 +428,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     ctx.stroke();
 
-    // Draw player Wave (triangle facing direction of movement)
     const screenPx = player.x - camera.x;
     const screenPy = player.y - camera.y;
 
     ctx.save();
     ctx.translate(screenPx, screenPy);
-    // Pitch visually matches direction (45 deg = PI/4)
-    const angle = player.isHolding ? -Math.PI/4 : Math.PI/4;
+    
+    // Pitch is steeper if mini wave (approx 63.4 degrees) vs 45 degrees
+    const pitch = player.isMini ? 1.107 : Math.PI/4; 
+    const angle = player.isHolding ? -pitch : pitch;
     ctx.rotate(angle);
     
-    ctx.fillStyle = '#6496ff';
+    ctx.fillStyle = player.isMini ? '#c084fc' : '#6496ff';
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -422,33 +454,46 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
   }
 
+  function drawDebugHitboxes() {
+    ctx.lineWidth = 2;
+    for (let hb of currentHitboxes) {
+      ctx.strokeStyle = hb.color;
+      ctx.beginPath();
+      if (hb.type === 'aabb') {
+        ctx.rect(hb.box.left - camera.x, hb.box.top - camera.y, hb.box.right - hb.box.left, hb.box.bottom - hb.box.top);
+      } else if (hb.type === 'triangle') {
+        ctx.moveTo(hb.p0.x - camera.x, hb.p0.y - camera.y);
+        ctx.lineTo(hb.p1.x - camera.x, hb.p1.y - camera.y);
+        ctx.lineTo(hb.p2.x - camera.x, hb.p2.y - camera.y);
+        ctx.closePath();
+      }
+      ctx.stroke();
+    }
+  }
+
   // --- MAIN LOOP ---
   function loop(time) {
     if (!lastTime) lastTime = time;
     let dt = (time - lastTime) / 1000;
-    // Cap dt to prevent massive jumps if tab is backgrounded
     if (dt > 0.1) dt = 0.1; 
     lastTime = time;
 
     // UPDATE
     if (mode === 'play' && state === 'playing') {
-      // Move player and camera forward
       const dx = WAVE_SPEED_X * dt;
       player.x += dx;
-      camera.x += dx; // Lock camera to player X
+      camera.x += dx; 
       
-      // Move player Y (diagonal)
+      const speedY = player.isMini ? WAVE_SPEED_X * 2 : WAVE_SPEED_X;
       if (player.isHolding) {
-        player.y -= WAVE_SPEED_Y * dt;
+        player.y -= speedY * dt;
       } else {
-        player.y += WAVE_SPEED_Y * dt;
+        player.y += speedY * dt;
       }
 
-      // Record trail (keep last 50 points)
       player.trail.push({x: player.x, y: player.y});
       if (player.trail.length > 50) player.trail.shift();
 
-      // Check Physics
       if (checkCollisions()) {
         state = 'crashed';
         crashOverlay.style.display = 'flex';
@@ -456,7 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // DRAW
-    // Clear screen
     ctx.fillStyle = '#0b0c10';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -468,11 +512,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (mode === 'play') {
       drawPlayer();
+      if (showHitboxes) drawDebugHitboxes();
     }
 
     animationFrameId = requestAnimationFrame(loop);
   }
 
-  // Start engine
   animationFrameId = requestAnimationFrame(loop);
 });

@@ -35,8 +35,14 @@
   <main class="game-container">
     <canvas id="game-canvas"></canvas>
     
+    <!-- Play Mode Overlay -->
+    <div id="play-ui" class="play-mode-overlay" style="display: none;">
+      <button id="btn-toggle-hitboxes" class="action-btn outline">Show Hitboxes</button>
+      <button id="btn-return-editor" class="action-btn primary">Return to Editor</button>
+    </div>
+    
     <!-- Floating Editor UI -->
-    <div id="editor-ui" class="editor-panel glass-panel">
+    <div id="editor-ui" class="editor-panel boxy-panel">
       <div class="editor-header">
         <button id="btn-toggle-mode" class="action-btn primary w-full">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -61,6 +67,40 @@
           <button class="tool-btn" data-tool="spike-right" title="Spike (Right)">
             <div class="icon-spike right"></div>
           </button>
+          
+          <button class="tool-btn" data-tool="slope-br" title="Slope (Bottom-Right)">
+            <div class="icon-slope"></div>
+          </button>
+          <button class="tool-btn" data-tool="slope-bl" title="Slope (Bottom-Left)">
+            <div class="icon-slope bl"></div>
+          </button>
+          <button class="tool-btn" data-tool="slope-tr" title="Slope (Top-Right)">
+            <div class="icon-slope tr"></div>
+          </button>
+          <button class="tool-btn" data-tool="slope-tl" title="Slope (Top-Left)">
+            <div class="icon-slope tl"></div>
+          </button>
+          
+          <button class="tool-btn" data-tool="steep-br" title="Steep Slope (Bottom-Right)">
+            <div class="icon-steep"></div>
+          </button>
+          <button class="tool-btn" data-tool="steep-bl" title="Steep Slope (Bottom-Left)">
+            <div class="icon-steep bl"></div>
+          </button>
+          <button class="tool-btn" data-tool="steep-tr" title="Steep Slope (Top-Right)">
+            <div class="icon-steep tr"></div>
+          </button>
+          <button class="tool-btn" data-tool="steep-tl" title="Steep Slope (Top-Left)">
+            <div class="icon-steep tl"></div>
+          </button>
+
+          <button class="tool-btn" data-tool="portal-normal" title="Normal Portal (Green)">
+            <div class="icon-portal normal"></div>
+          </button>
+          <button class="tool-btn" data-tool="portal-mini" title="Mini Portal (Purple)">
+            <div class="icon-portal mini"></div>
+          </button>
+
           <button class="tool-btn" data-tool="eraser" title="Eraser">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16C2.5 15.5 2.5 14.5 3 14L13 4C13.5 3.5 14.5 3.5 15 4L20 9C20.5 9.5 20.5 10.5 20 11L11 20"></path><line x1="10" y1="11" x2="15" y2="16"></line></svg>
           </button>
