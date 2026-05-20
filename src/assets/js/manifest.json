@@ -32,6 +32,22 @@
     "version": "1.0.0"
   },
   {
+    "id": "synth-keyboard",
+    "name": "Retro Synthesizer",
+    "description": "Premium client-side oscillator synth keyboard. Fully adjustable ADSR envelopes and waveform shapes.",
+    "category": "Music",
+    "icon": "[SYNTH]",
+    "tags": [
+      "music",
+      "synth",
+      "keyboard",
+      "adsr",
+      "audio"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "unit-converter",
     "name": "Unit Converter & Calculator",
     "description": "Fast size, digital data, length, and temperature conversions instantly as you type.",

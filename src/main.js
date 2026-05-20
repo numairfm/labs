@@ -26,6 +26,37 @@ const SVG_ICONS = {
       <rect x="14" y="14" width="7" height="7"></rect>
     </svg>
   `,
+  'synth-keyboard': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <rect x="3" y="3" width="18" height="18"></rect>
+      <path d="M9 3v18M15 3v18"></path>
+      <path d="M8 3v10h2V3M14 3v10h2V3"></path>
+    </svg>
+  `,
+  'ambient-noise': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+    </svg>
+  `,
+  'pomodoro': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+      <line x1="12" y1="2" x2="12" y2="4"></line>
+    </svg>
+  `,
+  'qr-encoder': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+      <rect x="14" y="14" width="3" height="3"></rect>
+      <rect x="18" y="18" width="3" height="3"></rect>
+      <rect x="14" y="18" width="3" height="3"></rect>
+      <rect x="18" y="14" width="3" height="3"></rect>
+    </svg>
+  `,
   'default': `
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
       <rect x="3" y="3" width="18" height="18"></rect>
