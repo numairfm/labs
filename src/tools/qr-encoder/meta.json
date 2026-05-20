@@ -1,0 +1,9 @@
+{
+  "name": "Offline QR Encoder",
+  "description": "Secure, completely offline QR Code encoder. Compiles vector matrix pixels locally and exports as SVG.",
+  "category": "Utilities",
+  "icon": "qr_code",
+  "tags": ["security", "qr", "utility", "svg", "offline"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

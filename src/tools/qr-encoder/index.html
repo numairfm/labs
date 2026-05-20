@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline QR Encoder - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em;">OFFLINE QR ENCODER</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <div class="synth-panel card">
+      <div class="qr-layout">
+        <!-- Input Panel -->
+        <div class="qr-control-panel">
+          <div class="control-section">
+            <span class="section-title">1. INPUT DATA</span>
+            <div class="control-box">
+              <textarea id="qr-text" class="text-input" placeholder="Type URL or text to encode..." rows="4">https://jukebox.dev</textarea>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <span class="section-title">2. DESIGN CONFIGURATION</span>
+            <div class="settings-grid">
+              <div class="config-box">
+                <label class="input-label" for="qr-ecc">Error Correction</label>
+                <select id="qr-ecc" class="select-input">
+                  <option value="L">L (7% Recovery)</option>
+                  <option value="M" selected>M (15% Recovery)</option>
+                  <option value="Q">Q (25% Recovery)</option>
+                  <option value="H">H (30% Recovery)</option>
+                </select>
+              </div>
+
+              <div class="config-box">
+                <label class="input-label">Module Design</label>
+                <select id="qr-style" class="select-input">
+                  <option value="square" selected>Strict Square</option>
+                  <option value="rounded">Rounded Dots</option>
+                  <option value="smooth">Continuous Liquified</option>
+                </select>
+              </div>
+
+              <div class="config-box">
+                <div class="config-header">
+                  <span class="config-name">QUIET ZONE</span>
+                  <span id="margin-val" class="config-val">4 blocks</span>
+                </div>
+                <input type="range" id="qr-margin" min="0" max="10" step="1" value="4">
+              </div>
+
+              <div class="config-box">
+                <div class="config-header">
+                  <span class="config-name">RESOLUTION SCALE</span>
+                  <span id="scale-val" class="config-val">500px</span>
+                </div>
+                <input type="range" id="qr-scale" min="200" max="1000" step="50" value="500">
+              </div>
+            </div>
+
+            <div class="color-pickers-row">
+              <div class="picker-container">
+                <span class="input-label">FOREGROUND</span>
+                <div class="picker-wrapper">
+                  <input type="color" id="qr-fg" value="#111111" class="color-picker-input">
+                  <span class="picker-hex" id="fg-hex">#111111</span>
+                </div>
+              </div>
+              
+              <div class="picker-container">
+                <span class="input-label">BACKGROUND</span>
+                <div class="picker-wrapper">
+                  <input type="color" id="qr-bg" value="#ffffff" class="color-picker-input">
+                  <span class="picker-hex" id="bg-hex">#FFFFFF</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Viewfinder Panel -->
+        <div class="qr-preview-panel">
+          <span class="section-title">3. VECTOR PREVIEW</span>
+          
+          <div class="qr-viewframe-container card">
+            <div id="qr-viewframe" class="qr-viewframe"></div>
+          </div>
+
+          <div class="playback-controls">
+            <button id="btn-download" class="btn-primary" aria-label="Download SVG File">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>DOWNLOAD SVG</span>
+            </button>
+            
+            <button id="btn-copy" class="btn-secondary" aria-label="Copy SVG Code to Clipboard">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>COPY CODE</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
