@@ -1,0 +1,34 @@
+[
+  {
+    "id": "image-compressor",
+    "name": "Image Compressor",
+    "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",
+    "category": "Media",
+    "icon": "🖼️",
+    "tags": [
+      "image",
+      "compress",
+      "png",
+      "jpeg",
+      "optimize"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "unit-converter",
+    "name": "Unit Converter & Calculator",
+    "description": "Fast size, digital data, length, and temperature conversions instantly as you type.",
+    "category": "Utilities",
+    "icon": "🔢",
+    "tags": [
+      "unit",
+      "convert",
+      "calculator",
+      "bytes",
+      "metric"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  }
+]
