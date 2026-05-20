@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ambient Sound Machine - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em;">AMBIENT MACHINE</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <div class="synth-panel card">
+      <!-- Play/Pause Control -->
+      <div class="playback-header">
+        <button id="play-btn" class="btn-play">
+          <svg id="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <span id="play-text">START ENGINE</span>
+        </button>
+        <div class="master-group">
+          <div class="control-row">
+            <span class="control-title">MASTER VOL</span>
+            <span id="master-val" class="control-val">70%</span>
+          </div>
+          <input type="range" id="master-vol" min="0" max="1" step="0.05" value="0.7">
+        </div>
+      </div>
+
+      <!-- Presets Row -->
+      <div class="presets-section">
+        <span class="section-title">PRESETS</span>
+        <div class="presets-grid">
+          <button class="preset-btn" data-preset="focus">FOCUS STUDY</button>
+          <button class="preset-btn" data-preset="sleep">DEEP SLEEP</button>
+          <button class="preset-btn" data-preset="rain">RAIN SHOWER</button>
+          <button class="preset-btn" data-preset="mute">CLEAR ALL</button>
+        </div>
+      </div>
+
+      <!-- Multi-channel Mixer -->
+      <div class="mixer-section">
+        <span class="section-title">SOUND MIXER</span>
+        <div class="channels-grid">
+          <!-- White Noise -->
+          <div class="channel-card">
+            <div class="channel-info">
+              <span class="channel-name">WHITE NOISE</span>
+              <span id="white-val" class="channel-val">0%</span>
+            </div>
+            <input type="range" class="channel-slider" id="vol-white" min="0" max="1" step="0.05" value="0">
+            <p class="channel-desc">Pure static hiss. Mask background speech and sharp noises.</p>
+          </div>
+
+          <!-- Pink Noise -->
+          <div class="channel-card">
+            <div class="channel-info">
+              <span class="channel-name">PINK NOISE</span>
+              <span id="pink-val" class="channel-val">30%</span>
+            </div>
+            <input type="range" class="channel-slider" id="vol-pink" min="0" max="1" step="0.05" value="0.3">
+            <p class="channel-desc">Balanced, waterfall-like sound. Optimal for deep focus and reading.</p>
+          </div>
+
+          <!-- Brown Noise -->
+          <div class="channel-card">
+            <div class="channel-info">
+              <span class="channel-name">BROWN NOISE</span>
+              <span id="brown-val" class="channel-val">0%</span>
+            </div>
+            <input type="range" class="channel-slider" id="vol-brown" min="0" max="1" step="0.05" value="0">
+            <p class="channel-desc">Deep, rumbling drone. Excellent for blocking low-frequency hums.</p>
+          </div>
+
+          <!-- Binaural/Cosmic -->
+          <div class="channel-card">
+            <div class="channel-info">
+              <span class="channel-name">BINAURAL HUM</span>
+              <span id="binaural-val" class="channel-val">15%</span>
+            </div>
+            <input type="range" class="channel-slider" id="vol-binaural" min="0" max="1" step="0.05" value="0.15">
+            <p class="channel-desc">Detuned brainwave sweep (100Hz/104Hz). Promotes calm pulsation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,5 +1,21 @@
 [
   {
+    "id": "ambient-noise",
+    "name": "Ambient Sound Machine",
+    "description": "Offline pink, white, brownian, and binaural sound generator. Blend and customize your background drone.",
+    "category": "Music",
+    "icon": "[SOUND]",
+    "tags": [
+      "music",
+      "synth",
+      "ambient",
+      "noise",
+      "audio"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "drum-pad",
     "name": "Virtual Drum Pad",
     "description": "Interactive retro drum machine synth. Plays real-time synthesized beats client-side.",

@@ -1,0 +1,9 @@
+{
+  "name": "Ambient Sound Machine",
+  "description": "Offline pink, white, brownian, and binaural sound generator. Blend and customize your background drone.",
+  "category": "Music",
+  "icon": "[SOUND]",
+  "tags": ["music", "synth", "ambient", "noise", "audio"],
+  "author": "Numair",
+  "version": "1.0.0"
+}
