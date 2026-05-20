@@ -1,9 +1,0 @@
-{
-  "name": "Test Tool",
-  "description": "Verification placeholder",
-  "category": "Utilities",
-  "icon": "verified",
-  "tags": ["test"],
-  "author": "Numair",
-  "version": "1.0.0"
-}
