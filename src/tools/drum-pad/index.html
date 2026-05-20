@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Drum Pad - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em;">VIRTUAL DRUM PAD</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <div class="synth-panel card">
+      <div class="mixer-controls">
+        <div class="control-row">
+          <span class="label">MASTER VOLUME</span>
+          <input type="range" id="master-vol" min="0" max="1" step="0.05" value="0.7">
+        </div>
+      </div>
+
+      <div class="pad-grid">
+        <button class="drum-pad" data-sound="kick" data-key="Q">
+          <span class="pad-key">Q</span>
+          <span class="pad-name">KICK</span>
+        </button>
+        <button class="drum-pad" data-sound="snare" data-key="W">
+          <span class="pad-key">W</span>
+          <span class="pad-name">SNARE</span>
+        </button>
+        <button class="drum-pad" data-sound="hihat" data-key="E">
+          <span class="pad-key">E</span>
+          <span class="pad-name">HI-HAT</span>
+        </button>
+        <button class="drum-pad" data-sound="clap" data-key="R">
+          <span class="pad-key">R</span>
+          <span class="pad-name">CLAP</span>
+        </button>
+        <button class="drum-pad" data-sound="tom" data-key="A">
+          <span class="pad-key">A</span>
+          <span class="pad-name">TOM</span>
+        </button>
+        <button class="drum-pad" data-sound="pluck" data-key="S">
+          <span class="pad-key">S</span>
+          <span class="pad-name">PLUCK</span>
+        </button>
+        <button class="drum-pad" data-sound="sub" data-key="D">
+          <span class="pad-key">D</span>
+          <span class="pad-name">SUB KICK</span>
+        </button>
+        <button class="drum-pad" data-sound="noise" data-key="F">
+          <span class="pad-key">F</span>
+          <span class="pad-name">CRASH</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

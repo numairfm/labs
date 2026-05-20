@@ -1,0 +1,79 @@
+.workspace-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.synth-panel {
+  width: 100%;
+  max-width: 680px;
+  padding: 2.5rem;
+}
+.mixer-controls {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1.5rem;
+}
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+.mixer-controls input[type="range"] {
+  width: 200px;
+  accent-color: var(--accent-blue);
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  height: 10px;
+  outline: none;
+}
+.pad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 580px) {
+  .pad-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.drum-pad {
+  aspect-ratio: 1;
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  position: relative;
+  transition: all 0.05s ease;
+  color: var(--text-primary);
+}
+.drum-pad:hover {
+  background-color: var(--bg-secondary);
+}
+.drum-pad.active {
+  background-color: var(--accent-blue);
+  color: white;
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px var(--border-color);
+}
+.pad-key {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1.1rem;
+  align-self: flex-start;
+}
+.pad-name {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  align-self: flex-end;
+}

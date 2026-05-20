@@ -1,5 +1,21 @@
 [
   {
+    "id": "drum-pad",
+    "name": "Virtual Drum Pad",
+    "description": "Interactive retro drum machine synth. Plays real-time synthesized beats client-side.",
+    "category": "Music",
+    "icon": "[DRUM]",
+    "tags": [
+      "music",
+      "synth",
+      "drums",
+      "synthpad",
+      "audio"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "image-compressor",
     "name": "Image Compressor",
     "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",

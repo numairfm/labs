@@ -1,6 +1,40 @@
 import { initTheme, toggleTheme } from './assets/js/utils.js';
 import toolsRegistry from './assets/js/manifest.json';
 
+// High-fidelity neo-brutalist SVG symbols matching the boutique styling (2.5px strokes, square caps)
+const SVG_ICONS = {
+  'image-compressor': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <rect x="3" y="3" width="18" height="18"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+  `,
+  'unit-converter': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <polyline points="17 4 22 9 17 14"></polyline>
+      <path d="M22 9H2"></path>
+      <polyline points="7 20 2 15 7 10"></polyline>
+      <path d="M2 15H22"></path>
+    </svg>
+  `,
+  'drum-pad': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+    </svg>
+  `,
+  'default': `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+      <rect x="3" y="3" width="18" height="18"></rect>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+    </svg>
+  `
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Initialize Theme Setup
   initTheme();
@@ -32,11 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Replace emojis with clean modern typographic symbols
-  function getCleanSymbol(icon, category) {
-    if (icon === '🖼️' || category === 'Media') return '[IMG]';
-    if (icon === '🔢' || category === 'Utilities') return '[NUM]';
-    return '[*]';
+  // Get hardcoded SVG symbol block based on tool ID
+  function getToolIconSvg(toolId) {
+    return SVG_ICONS[toolId] || SVG_ICONS['default'];
   }
 
   // 2. Render Cards Loop
@@ -70,7 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
           <span class="badge ${getBadgeClass(tool.category)}">${tool.category}</span>
-          <span style="font-family: var(--font-sans); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-secondary);">${getCleanSymbol(tool.icon, tool.category)}</span>
+          <span style="color: var(--text-secondary); display: inline-flex; align-items: center;">
+            ${getToolIconSvg(tool.id)}
+          </span>
         </div>
         <h3>${tool.name}</h3>
         <p>${tool.description}</p>
