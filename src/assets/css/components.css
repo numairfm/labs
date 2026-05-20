@@ -91,7 +91,7 @@
 .btn-primary:hover {
   background-color: hsl(230, 75%, 55%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--accent-blue), 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-blue) 30%, transparent);
 }
 
 .btn-primary:active {
@@ -181,17 +181,17 @@
 }
 
 .badge-teal {
-  background-color: rgba(20, 184, 166, 0.1);
+  background-color: color-mix(in srgb, var(--accent-teal) 10%, transparent);
   color: var(--accent-teal);
 }
 
 .badge-blue {
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: color-mix(in srgb, var(--accent-blue) 10%, transparent);
   color: var(--accent-blue);
 }
 
 .badge-red {
-  background-color: rgba(239, 68, 68, 0.1);
+  background-color: color-mix(in srgb, var(--accent-red) 10%, transparent);
   color: var(--accent-red);
 }
 
