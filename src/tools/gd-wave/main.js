@@ -229,8 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Exact strict AABB square hitbox for wave
     const hitSize = player.isMini ? 4 : 8; 
     const halfHit = hitSize / 2;
+
+    // Apply borders FIRST so pBox matches visual clamped position
+    const maxTop = CEILING_Y + player.size;
+    const maxBottom = FLOOR_Y - player.size;
+    if (player.y <= maxTop) {
+      player.y = maxTop;
+      player.trail[player.trail.length - 1].y = maxTop;
+    }
+    if (player.y >= maxBottom) {
+      player.y = maxBottom;
+      player.trail[player.trail.length - 1].y = maxBottom;
+    }
+
     const px = player.x;
-    const py = player.y;
+    const py = player.y; // Clamped py
     
     const pBox = {
       left: px - halfHit,
@@ -242,16 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentHitboxes.push({ type: 'aabb', box: pBox, color: 'lime' });
 
     let isCrashed = false;
-
-    // Apply borders
-    if (player.y <= CEILING_Y) {
-      player.y = CEILING_Y;
-      player.trail[player.trail.length - 1].y = CEILING_Y;
-    }
-    if (player.y >= FLOOR_Y) {
-      player.y = FLOOR_Y;
-      player.trail[player.trail.length - 1].y = FLOOR_Y;
-    }
 
     for (let obj of levelData) {
       const ox = obj.x * GRID_SIZE;

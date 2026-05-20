@@ -110,7 +110,7 @@ canvas#game-canvas {
 /* Play Mode Header Overlay */
 .play-mode-overlay {
   position: absolute;
-  top: 1rem;
+  top: 4.5rem;
   right: 1.5rem;
   display: flex;
   gap: 1rem;
