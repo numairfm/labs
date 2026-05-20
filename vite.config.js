@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve, join } from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = resolve(__filename, '..');
 
 function jukeboxAutoRegistryPlugin() {
   return {
@@ -21,9 +25,19 @@ function jukeboxAutoRegistryPlugin() {
           if (fs.existsSync(metaPath)) {
             try {
               const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+              if (!meta.name) {
+                console.warn(`[Jukebox Registry] Skipping ${folder}: 'name' is required in meta.json`);
+                return;
+              }
               toolsManifest.push({
                 id: folder,
-                ...meta
+                name: meta.name,
+                description: meta.description || '',
+                category: meta.category || 'Utilities',
+                icon: meta.icon || '',
+                tags: Array.isArray(meta.tags) ? meta.tags : [],
+                author: meta.author || 'Anonymous',
+                version: meta.version || '1.0.0'
               });
             } catch (e) {
               console.error(`Failed to parse meta.json in ${folderPath}`, e);
@@ -37,11 +51,19 @@ function jukeboxAutoRegistryPlugin() {
         fs.mkdirSync(assetsJsDir, { recursive: true });
       }
 
-      fs.writeFileSync(
-        join(assetsJsDir, 'manifest.json'),
-        JSON.stringify(toolsManifest, null, 2)
-      );
-      console.log(`[Jukebox Registry] Registered ${toolsManifest.length} tools dynamically.`);
+      const manifestPath = join(assetsJsDir, 'manifest.json');
+      const manifestContent = JSON.stringify(toolsManifest, null, 2);
+      let existingContent = '';
+      if (fs.existsSync(manifestPath)) {
+        existingContent = fs.readFileSync(manifestPath, 'utf8');
+      }
+
+      if (existingContent !== manifestContent) {
+        fs.writeFileSync(manifestPath, manifestContent);
+        console.log(`[Jukebox Registry] Registered ${toolsManifest.length} tools dynamically.`);
+      } else {
+        console.log(`[Jukebox Registry] Manifest unchanged (${toolsManifest.length} tools). Skipping file write.`);
+      }
     }
   };
 }
@@ -68,9 +90,12 @@ function getEntryPoints() {
   if (fs.existsSync(toolsDir)) {
     const folders = fs.readdirSync(toolsDir);
     folders.forEach(folder => {
-      const indexPath = join(toolsDir, folder, 'index.html');
-      if (fs.existsSync(indexPath)) {
-        entries[folder] = indexPath;
+      const folderPath = join(toolsDir, folder);
+      if (fs.statSync(folderPath).isDirectory()) {
+        const indexPath = join(folderPath, 'index.html');
+        if (fs.existsSync(indexPath)) {
+          entries[folder] = indexPath;
+        }
       }
     });
   }
