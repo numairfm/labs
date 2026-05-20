@@ -153,3 +153,47 @@ textarea:focus-visible {
     border-radius: 0;
   }
 }
+
+/* Touch & Mobile Optimizations */
+button, .btn, .chip, .card, .tool-btn {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .header {
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.25rem; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1.15rem; }
+}
+
+/* Mobile Utilities */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: inline-flex !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+

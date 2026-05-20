@@ -92,13 +92,45 @@
 <body class="container">
   <header class="header">
     <h1 style="font-size: 3rem; letter-spacing: 0.15em; font-weight: 900;">Labs</h1>
-    <button id="theme-toggle-btn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; justify-content: center;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
-        <circle cx="12" cy="12" r="10"></circle>
-        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
-      </svg>
-    </button>
+    <div style="display: flex; gap: 0.75rem; align-items: center;">
+      <button id="theme-toggle-btn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+        </svg>
+      </button>
+      <button id="menu-toggle-btn" class="btn-icon mobile-only" aria-label="Open Menu" title="Open Categories Menu" style="display: inline-flex; align-items: center; justify-content: center;">
+        <svg id="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+          <line x1="3" y1="12" x2="21" y2="12" class="line-mid"></line>
+          <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
+          <line x1="3" y1="18" x2="21" y2="18" class="line-bot"></line>
+        </svg>
+      </button>
+    </div>
   </header>
+
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+  <aside id="off-canvas-drawer" class="off-canvas-drawer">
+    <div class="drawer-header">
+      <h3 style="margin: 0; font-family: var(--font-sans); font-weight: 900; letter-spacing: 0.1em;">MENU</h3>
+      <button id="drawer-close-btn" class="btn-icon" aria-label="Close Drawer" style="display: inline-flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-content">
+      <div class="drawer-section">
+        <span class="input-label" style="font-family: var(--font-sans); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; display: block; color: var(--text-secondary);">Search Tools</span>
+        <div id="drawer-search-container"></div>
+      </div>
+      <div class="drawer-section">
+        <span class="input-label" style="font-family: var(--font-sans); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; display: block; color: var(--text-secondary);">Filter Category</span>
+        <div id="drawer-chips-container"></div>
+      </div>
+    </div>
+  </aside>
 
   <div class="search-box">
     <input type="text" id="search-bar" class="search-input" placeholder="SEARCH TOOLS...">

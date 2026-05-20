@@ -222,7 +222,7 @@ a.card:active, .card-interactive:active {
   margin-top: 1.5rem;
 }
 
-/* Animated Underline Effect for Links - Removed (Too flashy/AI-like, replaced with solid borders) */
+/* Animated Underline Effect for Links - Removed */
 .hover-underline {
   text-decoration: none;
   color: inherit;
@@ -231,3 +231,128 @@ a.card:active, .card-interactive:active {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
+/* Mobile Component Refinements */
+@media (max-width: 768px) {
+  .card {
+    padding: 1.25rem;
+    box-shadow: 2px 2px 0px var(--border-color);
+  }
+  
+  a.card:hover, .card-interactive:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--border-color);
+  }
+  
+  a.card:active, .card-interactive:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--border-color);
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card h3 {
+    font-size: 1.15rem;
+  }
+  
+  .card p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Off-Canvas Navigation Drawer Styling */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 15, 0);
+  z-index: 1000;
+  pointer-events: none;
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-backdrop.active {
+  background: rgba(10, 10, 15, 0.65);
+  pointer-events: auto;
+}
+
+.off-canvas-drawer {
+  position: fixed;
+  top: 0;
+  right: -330px;
+  width: 300px;
+  height: 100vh;
+  background-color: var(--bg-card);
+  border-left: 2px solid var(--border-color);
+  box-shadow: -4px 0px 0px var(--border-color);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.off-canvas-drawer.active {
+  right: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+#drawer-search-container .search-box {
+  margin: 0 !important;
+}
+
+#drawer-search-container .search-input {
+  width: 100%;
+}
+
+#drawer-chips-container .filter-chips {
+  margin-bottom: 0 !important;
+  justify-content: flex-start !important;
+}
+
+/* Animated Hamburger lines transformation */
+#hamburger-icon line {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform-origin: center;
+}
+
+#hamburger-icon.open .line-mid {
+  opacity: 0;
+}
+
+#hamburger-icon.open .line-top {
+  transform: translateY(6px) rotate(45deg);
+}
+
+#hamburger-icon.open .line-bot {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+
