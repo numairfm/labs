@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Downloader - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'dark'; // Force dark premium mode by default for Spotify neon theme
+      try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/labs/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em; font-family: var(--font-heading); text-transform: uppercase;">SPOTIFY TO MP3</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="spotify-wrapper">
+    <!-- Vinyl Deck Turntable Player -->
+    <div class="card player-deck-card">
+      <div class="deck-layout">
+        <!-- Turntable Platter and Vinyl -->
+        <div class="turntable-container">
+          <div class="turntable-platter">
+            <div id="vinyl-disc" class="vinyl-disc">
+              <div class="vinyl-groove-1"></div>
+              <div class="vinyl-groove-2"></div>
+              <div class="vinyl-label">
+                <div class="vinyl-center-hole"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Tonearm Stylus -->
+          <div id="tonearm" class="tonearm-stylus">
+            <svg viewBox="0 0 100 180" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
+              <path d="M50 10 C 50 10, 80 50, 70 120 L 75 150" stroke="#94a3b8" />
+              <rect x="68" y="145" width="14" height="22" rx="2" fill="#ef4444" stroke="none" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="controls-overlay">
+          <div class="input-group">
+            <label for="url-input" class="spotify-label">Spotify Song Link</label>
+            <div class="input-with-action">
+              <input type="text" id="url-input" placeholder="https://open.spotify.com/track/..." class="spotify-input">
+              <button id="btn-paste" class="action-btn outline spotify-btn" title="Paste link from clipboard">📋 Paste</button>
+            </div>
+          </div>
+
+          <button id="btn-download" class="action-btn primary w-full spotify-btn-download">
+            ⚡ GET HIGH-QUALITY MP3
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings panel -->
+      <div class="settings-accordion">
+        <button id="btn-toggle-settings" class="settings-header-btn">
+          <span>⚙️ Custom API Mirror Endpoint</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div id="settings-panel" class="settings-body" style="display: none;">
+          <div class="input-group" style="margin-bottom: 0;">
+            <input type="text" id="api-instance" value="https://api.cobalt.tools" placeholder="https://api.cobalt.tools" class="spotify-input">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status feedback Equalizer & Logs -->
+    <div class="card feedback-card">
+      <div class="feedback-header">
+        <div class="status-indicator">
+          <span id="status-pulse" class="pulse-dot"></span>
+          <span id="status-label" class="status-text">DECK IDLE</span>
+        </div>
+      </div>
+      
+      <!-- Virtual LCD Screen -->
+      <div class="lcd-screen" id="lcd-screen">
+        <div class="lcd-row text-muted">&gt; System initialized. Awaiting song link.</div>
+      </div>
+
+      <!-- Equalizer Visualizer Bars -->
+      <div class="equalizer-bars" id="eq-visualizer">
+        <div class="eq-bar" style="--h: 20%"></div>
+        <div class="eq-bar" style="--h: 10%"></div>
+        <div class="eq-bar" style="--h: 40%"></div>
+        <div class="eq-bar" style="--h: 15%"></div>
+        <div class="eq-bar" style="--h: 60%"></div>
+        <div class="eq-bar" style="--h: 30%"></div>
+        <div class="eq-bar" style="--h: 80%"></div>
+        <div class="eq-bar" style="--h: 45%"></div>
+        <div class="eq-bar" style="--h: 90%"></div>
+        <div class="eq-bar" style="--h: 50%"></div>
+        <div class="eq-bar" style="--h: 25%"></div>
+        <div class="eq-bar" style="--h: 70%"></div>
+      </div>
+
+      <div class="progress-section" id="progress-container" style="opacity: 0;">
+        <div class="retro-progress-bar">
+          <div id="download-progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

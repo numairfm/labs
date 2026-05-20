@@ -1,0 +1,9 @@
+{
+  "name": "Spotify Downloader",
+  "description": "Convert and download Spotify tracks directly to high-quality MP3 format with one click.",
+  "category": "Utilities",
+  "icon": "music_note",
+  "tags": ["audio", "music", "spotify", "converter", "utility"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

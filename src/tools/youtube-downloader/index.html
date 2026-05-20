@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Downloader - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/labs/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em; font-family: var(--font-heading); text-transform: uppercase;">YT DOWNLOADER</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="downloader-wrapper">
+    <div class="card downloader-card">
+      <div class="form-section">
+        <div class="input-group">
+          <label for="url-input" class="brutalist-label">Enter YouTube Link</label>
+          <div class="input-with-action">
+            <input type="text" id="url-input" placeholder="https://www.youtube.com/watch?v=..." class="brutalist-input">
+            <button id="btn-paste" class="action-btn outline" title="Paste link from clipboard">📋 Paste</button>
+          </div>
+        </div>
+
+        <div class="options-grid">
+          <div class="option-item">
+            <label class="brutalist-label">Download Format</label>
+            <div class="format-toggle">
+              <button id="fmt-audio" class="format-btn active">🎵 Audio (MP3)</button>
+              <button id="fmt-video" class="format-btn">🎬 Video (MP4)</button>
+            </div>
+          </div>
+
+          <div class="option-item" id="quality-selector-container" style="display: none;">
+            <label for="quality-select" class="brutalist-label">Video Quality</label>
+            <select id="quality-select" class="brutalist-select">
+              <option value="1080">1080p (Full HD)</option>
+              <option value="720" selected>720p (HD)</option>
+              <option value="480">480p (SD)</option>
+              <option value="360">360p (Mobile)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="btn-download" class="action-btn primary w-full download-trigger-btn">
+          ⚡ CONVERT & DOWNLOAD
+        </button>
+      </div>
+
+      <!-- Settings panel accordion -->
+      <div class="settings-accordion">
+        <button id="btn-toggle-settings" class="settings-header-btn">
+          <span>⚙️ Advanced API Settings</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div id="settings-panel" class="settings-body" style="display: none;">
+          <div class="input-group" style="margin-bottom: 0;">
+            <label for="api-instance" class="brutalist-label">Cobalt API Instance Endpoint</label>
+            <input type="text" id="api-instance" value="https://api.cobalt.tools" placeholder="https://api.cobalt.tools" class="brutalist-input">
+            <p class="settings-tip">If the default API is overloaded, you can type a custom mirror (e.g. <code>https://cobalt.api.ryz.cx</code> or <code>https://api.cobalt.tools</code>)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Console Logs output -->
+    <div class="card terminal-card">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="terminal-title">DOWNLOADER_SHELL.sh</span>
+      </div>
+      <div class="terminal-body" id="terminal-logs">
+        <div class="log-line text-muted">[SYSTEM] Downloader shell active. Awaiting URL input.</div>
+      </div>
+      <div class="terminal-progress-container" id="terminal-progress" style="display: none;">
+        <div class="retro-progress-bar">
+          <div id="download-progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

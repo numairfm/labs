@@ -1,0 +1,9 @@
+{
+  "name": "YouTube Downloader",
+  "description": "Convert and download YouTube videos directly to MP3 or MP4 format using high-speed servers.",
+  "category": "Utilities",
+  "icon": "download",
+  "tags": ["video", "audio", "youtube", "converter", "utility"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

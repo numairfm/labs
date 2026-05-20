@@ -1,0 +1,388 @@
+/* Spotify to MP3 Neon-Green Turntable Deck Theme */
+
+:root {
+  --spotify-green: hsl(142, 70%, 45%);
+  --spotify-green-hover: hsl(142, 75%, 52%);
+  --spotify-dark: hsl(142, 10%, 8%);
+  --spotify-card: hsl(142, 10%, 12%);
+  --spotify-border: hsl(142, 5%, 25%);
+  --lcd-bg: #091a0c;
+  --lcd-text: #1db954;
+}
+
+[data-theme="light"] {
+  /* Keep it dark & atmospheric for the music player deck to retain peak premium look, but soften borders slightly */
+  --spotify-border: hsl(142, 5%, 35%);
+}
+
+.spotify-wrapper {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  min-height: calc(100vh - 120px);
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .spotify-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+.player-deck-card {
+  background-color: var(--spotify-card) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: var(--shadow-main) !important;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.deck-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 550px) {
+  .deck-layout {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Turntable Platter & Vinyl Disc */
+.turntable-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: #141517;
+  border: 4px solid var(--border-color);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.turntable-platter {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: #1e2022;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vinyl-disc {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #282828, #282828 2px, #181818 4px, #181818 6px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s linear;
+}
+
+.vinyl-disc.spinning {
+  animation: spin 2.5s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.vinyl-label {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: var(--spotify-green);
+  border: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.5rem;
+  color: black;
+  text-align: center;
+}
+
+.vinyl-center-hole {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #141517;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Tonearm Stylus */
+.tonearm-stylus {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  width: 50px;
+  height: 100px;
+  z-index: 10;
+  transform-origin: 25px 15px;
+  transform: rotate(0deg);
+  transition: transform 0.8s ease-in-out;
+}
+
+.tonearm-stylus.playing {
+  transform: rotate(23deg);
+}
+
+/* Form Controls */
+.controls-overlay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.spotify-label {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: block;
+  letter-spacing: 0.05em;
+}
+
+.input-with-action {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spotify-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  outline: none;
+  box-shadow: 2px 2px 0 var(--border-color);
+  transition: all 0.1s ease;
+}
+
+.spotify-input:focus {
+  border-color: var(--spotify-green);
+  box-shadow: 4px 4px 0 var(--border-color);
+  transform: translate(-2px, -2px);
+}
+
+.spotify-btn {
+  border-color: var(--border-color);
+}
+
+.spotify-btn:hover {
+  background: var(--bg-primary);
+  border-color: var(--spotify-green);
+}
+
+.spotify-btn-download {
+  background-color: var(--spotify-green) !important;
+  color: black !important;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  border: 2px solid var(--border-color) !important;
+  box-shadow: 5px 5px 0 var(--border-color) !important;
+  padding: 1.1rem !important;
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+
+.spotify-btn-download:hover:not(.disabled) {
+  background-color: var(--spotify-green-hover) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--border-color) !important;
+}
+
+.spotify-btn-download:active:not(.disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--border-color) !important;
+}
+
+/* Settings Accordion */
+.settings-accordion {
+  border: 2px solid var(--border-color);
+}
+
+.settings-header-btn {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: var(--bg-secondary);
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.settings-body {
+  padding: 1rem;
+  background: var(--bg-card);
+  border-top: 2px solid var(--border-color);
+}
+
+/* LCD Visual Feedback Screen */
+.feedback-card {
+  background-color: #0b0c10 !important;
+  border-color: var(--border-color) !important;
+  box-shadow: var(--shadow-main) !important;
+  padding: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 350px;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.pulse-dot.active {
+  background: var(--spotify-green);
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+.status-text {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.status-text.active {
+  color: var(--spotify-green);
+}
+
+/* Virtual LCD Screen block */
+.lcd-screen {
+  background: var(--lcd-bg);
+  border: 2px solid var(--border-color);
+  padding: 1.25rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  color: var(--lcd-text);
+  min-height: 140px;
+  overflow-y: auto;
+  box-shadow: inset 0 0 12px rgba(0, 255, 100, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.lcd-row {
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.lcd-row.text-muted { color: rgba(29, 185, 84, 0.5); }
+.lcd-row.text-error { color: #f87171; }
+.lcd-row.text-success { color: #22c55e; font-weight: bold; }
+
+/* Equalizer Bars container */
+.equalizer-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 50px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 4px;
+}
+
+.eq-bar {
+  flex: 1;
+  background-color: #1e3a24;
+  height: var(--h, 10%);
+  transition: height 0.35s ease;
+  max-width: 14px;
+}
+
+.eq-bar.active {
+  background-color: var(--spotify-green);
+  animation: bounce var(--d, 0.4s) infinite alternate ease-in-out;
+}
+
+/* Map alternate animations for active equalizer effect */
+.eq-bar.active:nth-child(1) { --d: 0.35s; }
+.eq-bar.active:nth-child(2) { --d: 0.5s; }
+.eq-bar.active:nth-child(3) { --d: 0.28s; }
+.eq-bar.active:nth-child(4) { --d: 0.42s; }
+.eq-bar.active:nth-child(5) { --d: 0.31s; }
+.eq-bar.active:nth-child(6) { --d: 0.48s; }
+.eq-bar.active:nth-child(7) { --d: 0.25s; }
+.eq-bar.active:nth-child(8) { --d: 0.39s; }
+.eq-bar.active:nth-child(9) { --d: 0.45s; }
+.eq-bar.active:nth-child(10) { --d: 0.33s; }
+.eq-bar.active:nth-child(11) { --d: 0.52s; }
+.eq-bar.active:nth-child(12) { --d: 0.29s; }
+
+@keyframes bounce {
+  0% { height: 10%; }
+  100% { height: 95%; }
+}
+
+.progress-section {
+  transition: opacity 0.3s ease;
+}
+
+.retro-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #142217;
+  border: 2px solid var(--border-color);
+  padding: 1px;
+}
+
+#download-progress-fill {
+  height: 100%;
+  background: var(--spotify-green);
+  transition: width 0.2s ease;
+}
