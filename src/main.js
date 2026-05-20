@@ -162,6 +162,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Initial Draw
+  // 5. Off-Canvas Navigation Drawer Controllers & Reshuffling
+  const menuToggleBtn = document.getElementById('menu-toggle-btn');
+  const drawerCloseBtn = document.getElementById('drawer-close-btn');
+  const offCanvasDrawer = document.getElementById('off-canvas-drawer');
+  const drawerBackdrop = document.getElementById('drawer-backdrop');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  
+  const searchBox = document.querySelector('.search-box');
+  const drawerSearchContainer = document.getElementById('drawer-search-container');
+  const drawerChipsContainer = document.getElementById('drawer-chips-container');
+  
+  function openDrawer() {
+    if (offCanvasDrawer) offCanvasDrawer.classList.add('active');
+    if (drawerBackdrop) drawerBackdrop.classList.add('active');
+    if (hamburgerIcon) hamburgerIcon.classList.add('open');
+  }
+  
+  function closeDrawer() {
+    if (offCanvasDrawer) offCanvasDrawer.classList.remove('active');
+    if (drawerBackdrop) drawerBackdrop.classList.remove('active');
+    if (hamburgerIcon) hamburgerIcon.classList.remove('open');
+  }
+  
+  if (menuToggleBtn) menuToggleBtn.addEventListener('click', openDrawer);
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeDrawer);
+  if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
+  
+  function checkViewportLayout() {
+    if (window.innerWidth <= 768) {
+      // Mobile View: Move search and chips inside drawer containers
+      if (searchBar && drawerSearchContainer && drawerSearchContainer.firstElementChild !== searchBar) {
+        drawerSearchContainer.appendChild(searchBar);
+      }
+      if (chipsContainer && drawerChipsContainer && drawerChipsContainer.firstElementChild !== chipsContainer) {
+        drawerChipsContainer.appendChild(chipsContainer);
+      }
+    } else {
+      // Desktop View: Restore search and chips to original inline locations
+      if (searchBar && searchBox && searchBox.firstElementChild !== searchBar) {
+        searchBox.appendChild(searchBar);
+      }
+      if (chipsContainer) {
+        const toolsGrid = document.getElementById('tools-grid');
+        if (toolsGrid && chipsContainer.nextElementSibling !== toolsGrid) {
+          toolsGrid.parentNode.insertBefore(chipsContainer, toolsGrid);
+        }
+      }
+      closeDrawer();
+    }
+  }
+  
+  window.addEventListener('resize', checkViewportLayout);
+  checkViewportLayout(); // Initial check
+
+  // 6. Initial Draw
   renderTools();
 });
