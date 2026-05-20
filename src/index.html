@@ -3,9 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jukebox</title>
+  <title>Jukebox - Premium Interactive Personal Toolbox</title>
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="stylesheet" href="./assets/css/components.css">
+  <script>
+    // FOUC (Flash of Unstyled Content) / FLT (Flash of Light Theme) Prevention
+    (function() {
+      let savedTheme = 'light';
+      try {
+        savedTheme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <style>
+    .hero-section {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0.5rem auto 0;
+    }
+    .search-box {
+      margin: 1.5rem auto 2.5rem;
+      max-width: 600px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      outline: none;
+      box-shadow: var(--shadow-main);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+    .filter-chips {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .chip {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chip.active, .chip:hover {
+      background-color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: white;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+  </style>
 </head>
-<body>
-  <h1>Welcome to Jukebox</h1>
+<body class="container">
+  <header class="header">
+    <h1>Jukebox</h1>
+    <button id="theme-toggle-btn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Light/Dark Theme">🌓</button>
+  </header>
+
+  <div class="hero-section">
+    <p class="hero-subtitle">Your personal premium offline-first toolbox. No uploads, no backend, 100% secure in-browser execution.</p>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="search-bar" class="search-input" placeholder="Search a tool, conversion, toy...">
+  </div>
+
+  <div id="filter-chips" class="filter-chips">
+    <button class="chip active" data-category="All">All Tools</button>
+    <button class="chip" data-category="Media">Media</button>
+    <button class="chip" data-category="Utilities">Utilities</button>
+    <button class="chip" data-category="Music">Music</button>
+    <button class="chip" data-category="Toys">Toys</button>
+  </div>
+
+  <main id="tools-grid" class="tools-grid">
+    <!-- Dynamic grid populated by main.js -->
+  </main>
+
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
