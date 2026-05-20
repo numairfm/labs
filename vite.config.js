@@ -69,6 +69,7 @@ function jukeboxAutoRegistryPlugin() {
 }
 
 export default defineConfig({
+  base: '/labs/',
   root: 'src',
   publicDir: '../public',
   build: {
