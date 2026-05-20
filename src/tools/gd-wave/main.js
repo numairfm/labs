@@ -186,6 +186,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.code === 'Space') player.isHolding = false;
   });
 
+  // Touch event locks for mobile gameplay stability
+  canvas.addEventListener('touchstart', (e) => {
+    if (mode === 'play') {
+      e.preventDefault();
+      if (state === 'crashed') {
+        startPlayMode();
+      } else {
+        player.isHolding = true;
+      }
+    }
+  }, { passive: false });
+  
+  canvas.addEventListener('touchmove', (e) => {
+    if (mode === 'play') {
+      e.preventDefault(); // Absolute lock scroll
+    }
+  }, { passive: false });
+  
+  canvas.addEventListener('touchend', (e) => {
+    if (mode === 'play') {
+      e.preventDefault();
+      player.isHolding = false;
+    }
+  }, { passive: false });
+
   // --- EDITOR LOGIC ---
   function handleEditorAction(clientX, clientY) {
     const worldX = clientX + camera.x;

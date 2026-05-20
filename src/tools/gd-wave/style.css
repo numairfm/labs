@@ -261,3 +261,57 @@ canvas#game-canvas {
   color: rgba(255,255,255,0.8);
   margin-top: 1rem;
 }
+
+/* Responsive styles for Mobile devices */
+@media (max-width: 768px) {
+  .editor-panel {
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 480px;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    align-items: stretch;
+  }
+  
+  .editor-header {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 0;
+    padding-bottom: 0.8rem;
+  }
+  
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.4rem;
+  }
+  
+  .tool-btn {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+  }
+  
+  .data-section {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 0;
+    padding-top: 0.8rem;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .data-section .action-btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

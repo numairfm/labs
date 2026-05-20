@@ -78,6 +78,22 @@
     "version": "1.0.0"
   },
   {
+    "id": "image-bg-remover",
+    "name": "Image Background Remover",
+    "description": "Remove backgrounds automatically with AI Auto Mode or manually with the Retro Magic Color Eraser.",
+    "category": "Utilities",
+    "icon": "blur_off",
+    "tags": [
+      "image",
+      "design",
+      "ai",
+      "utility",
+      "offline"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "image-compressor",
     "name": "Image Compressor",
     "description": "Adjustable on-browser image optimizer. Reduces JPEGs/PNGs entirely client-side.",
@@ -156,6 +172,22 @@
     "version": "1.0.0"
   },
   {
+    "id": "spotify-downloader",
+    "name": "Spotify Downloader",
+    "description": "Convert and download Spotify tracks directly to high-quality MP3 format with one click.",
+    "category": "Utilities",
+    "icon": "music_note",
+    "tags": [
+      "audio",
+      "music",
+      "spotify",
+      "converter",
+      "utility"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
     "id": "synth-keyboard",
     "name": "Retro Synthesizer",
     "description": "Premium client-side oscillator synth keyboard. Fully adjustable ADSR envelopes and waveform shapes.",
@@ -212,6 +244,22 @@
       "image",
       "AI",
       "canvas",
+      "utility"
+    ],
+    "author": "Numair",
+    "version": "1.0.0"
+  },
+  {
+    "id": "youtube-downloader",
+    "name": "YouTube Downloader",
+    "description": "Convert and download YouTube videos directly to MP3 or MP4 format using high-speed servers.",
+    "category": "Utilities",
+    "icon": "download",
+    "tags": [
+      "video",
+      "audio",
+      "youtube",
+      "converter",
       "utility"
     ],
     "author": "Numair",

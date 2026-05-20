@@ -209,7 +209,7 @@ bird.draw();
 // Event Listeners
 function handleJump(e) {
     if (e.type === 'keydown' && e.code !== 'Space') return;
-    e.preventDefault(); // Prevent scrolling on spacebar
+    if (e.cancelable) e.preventDefault();
     
     if (gameState === 'PLAYING') {
         bird.jump();
@@ -225,9 +225,16 @@ window.addEventListener('keydown', handleJump);
 canvas.addEventListener('mousedown', handleJump);
 canvas.addEventListener('touchstart', handleJump, { passive: false });
 
+// Make window-wide tapping (outside buttons/headers) trigger a jump on touch devices
+window.addEventListener('touchstart', (e) => {
+    if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.flappy-header')) return;
+    handleJump(e);
+}, { passive: false });
+
 startBtn.addEventListener('click', resetGame);
 restartBtn.addEventListener('click', resetGame);
 
 // Theme Toggle
 themeToggle.addEventListener('click', toggleTheme);
+
 
