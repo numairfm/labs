@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Compressor - JUKEBOX</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="container">
+  <header class="header">
+    <a href="/" class="btn-icon" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Back to Hub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1 style="letter-spacing: 0.05em;">VIDEO COMPRESSOR</h1>
+    <button id="theme-btn" class="btn-icon" aria-label="Toggle Theme" style="display: inline-flex; align-items: center; justify-content: center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="workspace-wrapper">
+    <div class="layout-grid">
+      <!-- Sidebar Settings -->
+      <aside class="settings-panel card">
+        <h2 class="panel-title">Compression Settings</h2>
+        
+        <div class="settings-group">
+          <label>File Upload</label>
+          <button id="btn-upload" class="action-btn outline w-full" style="justify-content: center;">
+            Choose Video File
+          </button>
+          <input type="file" id="file-input" accept="video/mp4,video/webm,video/ogg" style="display: none;">
+        </div>
+
+        <div class="settings-group">
+          <label>Resolution Scale</label>
+          <select id="scale-select" class="form-select">
+            <option value="1">100% (Original)</option>
+            <option value="0.7">70%</option>
+            <option value="0.5" selected>50%</option>
+            <option value="0.35">35%</option>
+          </select>
+        </div>
+
+        <div class="settings-group">
+          <label>Target Bitrate (bps)</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="range" id="bitrate-slider" min="500000" max="8000000" step="100000" value="2500000" style="flex: 1;">
+            <span id="bitrate-val" style="font-size: 0.8rem; font-family: monospace;">2.5M</span>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="include-audio" checked>
+            Include Audio Track
+          </label>
+        </div>
+
+        <div class="settings-group" style="margin-top: 2rem;">
+          <button id="btn-compress" class="action-btn primary w-full disabled" style="justify-content: center; padding: 1rem;">
+            START COMPRESSION
+          </button>
+        </div>
+        
+        <div id="progress-container" style="display: none; margin-top: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.5rem;">
+            <span>Compressing...</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="progress-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Main Stage -->
+      <div class="preview-stage card" id="drop-zone">
+        <div id="upload-prompt" class="upload-prompt">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; color: var(--text-secondary);"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+          <p>Drag and drop a video here</p>
+        </div>
+        
+        <!-- Hidden source video element -->
+        <video id="source-video" style="display: none;" playsinline></video>
+        
+        <!-- Render canvas -->
+        <div id="canvas-wrapper" style="display: none; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+          <canvas id="output-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

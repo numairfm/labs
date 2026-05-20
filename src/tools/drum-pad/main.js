@@ -1,4 +1,4 @@
-import { initTheme, toggleTheme, showToast } from '../../assets/js/utils.js';
+import { initTheme, toggleTheme } from '../../assets/js/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -10,11 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const pads = document.querySelectorAll('.drum-item');
+  const pads = document.querySelectorAll('.pad');
   const masterVolSlider = document.getElementById('master-vol');
+  const volVal = document.getElementById('vol-val');
+  const kitBtns = document.querySelectorAll('.kit-btn');
 
   let audioCtx = null;
   let masterGain = null;
+  let selectedKit = 'acoustic';
+
+  kitBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      kitBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedKit = btn.dataset.kit;
+    });
+  });
 
   function initAudio() {
     if (audioCtx) return;
@@ -26,56 +37,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (masterVolSlider) {
     masterVolSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      volVal.textContent = `${Math.round(val * 100)}%`;
       if (masterGain && audioCtx) {
-        masterGain.gain.setValueAtTime(parseFloat(e.target.value), audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(val, audioCtx.currentTime);
       }
     });
   }
 
-  // Synth Engines
+  // --- AUDIO SYNTHESIS ENGINES --- //
+
+  // Shared generic noise buffer generator
+  function createNoiseBuffer(durationSecs) {
+    const bufferSize = audioCtx.sampleRate * durationSecs;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    return buffer;
+  }
+
   function playKick(time) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.connect(gain);
     gain.connect(masterGain);
 
-    osc.frequency.setValueAtTime(150, time);
-    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.15);
-
-    gain.gain.setValueAtTime(1, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
-
-    osc.start(time);
-    osc.stop(time + 0.16);
+    if (selectedKit === 'acoustic') {
+      osc.frequency.setValueAtTime(150, time);
+      osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.15);
+      gain.gain.setValueAtTime(1, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+      osc.start(time);
+      osc.stop(time + 0.16);
+    } else { // 808 Synth
+      osc.frequency.setValueAtTime(75, time);
+      osc.frequency.exponentialRampToValueAtTime(20, time + 0.35);
+      gain.gain.setValueAtTime(1.2, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+      osc.start(time);
+      osc.stop(time + 0.36);
+    }
   }
 
   function playSnare(time) {
-    const bufferSize = audioCtx.sampleRate * 0.2; // 0.2 seconds
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-
     const noiseNode = audioCtx.createBufferSource();
-    noiseNode.buffer = buffer;
-
+    noiseNode.buffer = createNoiseBuffer(0.2);
     const filter = audioCtx.createBiquadFilter();
     filter.type = 'highpass';
-    filter.frequency.value = 1000;
-
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.8, time);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+    filter.frequency.value = selectedKit === 'acoustic' ? 1000 : 2000;
+    
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(selectedKit === 'acoustic' ? 0.8 : 1.0, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
 
     noiseNode.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGain);
+    filter.connect(noiseGain);
+    noiseGain.connect(masterGain);
 
-    // Snap component (short low pitch sweep)
+    // Snap component
     const snapOsc = audioCtx.createOscillator();
     const snapGain = audioCtx.createGain();
+    snapOsc.type = selectedKit === 'acoustic' ? 'triangle' : 'sine';
     snapOsc.frequency.setValueAtTime(180, time);
+    if (selectedKit === 'synth') {
+      snapOsc.frequency.exponentialRampToValueAtTime(50, time + 0.1);
+    }
     snapGain.gain.setValueAtTime(0.5, time);
     snapGain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
     
@@ -85,77 +113,104 @@ document.addEventListener('DOMContentLoaded', () => {
     noiseNode.start(time);
     noiseNode.stop(time + 0.21);
     snapOsc.start(time);
-    snapOsc.stop(time + 0.06);
+    snapOsc.stop(time + 0.11);
   }
 
-  function playHiHat(time) {
-    const bufferSize = audioCtx.sampleRate * 0.05; // 0.05s
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
+  let activeOpenHat = null; // Track open hat for choking
+
+  function playClosedHat(time) {
+    // Choke open hat if it's playing
+    if (activeOpenHat && activeOpenHat.gainNode) {
+      activeOpenHat.gainNode.gain.cancelScheduledValues(time);
+      activeOpenHat.gainNode.gain.setValueAtTime(activeOpenHat.gainNode.gain.value, time);
+      activeOpenHat.gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
+      activeOpenHat = null;
     }
 
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 7500;
-    filter.Q.value = 5;
-
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.3, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGain);
-
-    source.start(time);
-    source.stop(time + 0.06);
-  }
-
-  function playClap(time) {
-    // 3 overlapping micro noise bursts
-    for (let i = 0; i < 3; i++) {
-      const triggerTime = time + (i * 0.015);
-      const bufferSize = audioCtx.sampleRate * 0.06;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let j = 0; j < bufferSize; j++) {
-        data[j] = Math.random() * 2 - 1;
-      }
-
+    if (selectedKit === 'acoustic') {
       const source = audioCtx.createBufferSource();
-      source.buffer = buffer;
-
+      source.buffer = createNoiseBuffer(0.05);
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.value = 1500;
-
+      filter.frequency.value = 7500;
+      filter.Q.value = 5;
+      
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.4 - (i * 0.1), triggerTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, triggerTime + 0.05);
+      gain.gain.setValueAtTime(0.6, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
       source.connect(filter);
       filter.connect(gain);
       gain.connect(masterGain);
-
-      source.start(triggerTime);
-      source.stop(triggerTime + 0.06);
+      source.start(time);
+      source.stop(time + 0.06);
+    } else { // 808 Synth Hat
+      const osc = audioCtx.createOscillator();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(4000, time);
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.4, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(time);
+      osc.stop(time + 0.06);
     }
   }
 
-  function playTom(time) {
+  function playOpenHat(time) {
+    const gain = audioCtx.createGain();
+    gain.connect(masterGain);
+
+    if (selectedKit === 'acoustic') {
+      const source = audioCtx.createBufferSource();
+      source.buffer = createNoiseBuffer(0.4);
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 7500;
+      filter.Q.value = 3;
+      
+      gain.gain.setValueAtTime(0.6, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+
+      source.connect(filter);
+      filter.connect(gain);
+      source.start(time);
+      source.stop(time + 0.45);
+    } else { // 808 Synth Open Hat
+      const osc = audioCtx.createOscillator();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(4000, time);
+      
+      gain.gain.setValueAtTime(0.4, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+      
+      osc.connect(gain);
+      osc.start(time);
+      osc.stop(time + 0.45);
+    }
+
+    activeOpenHat = { gainNode: gain, triggerTime: time };
+  }
+
+  function playTom(time, type) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.connect(gain);
     gain.connect(masterGain);
 
-    osc.frequency.setValueAtTime(180, time);
-    osc.frequency.exponentialRampToValueAtTime(75, time + 0.25);
+    let startFreq, endFreq;
+    if (type === 'high') {
+      startFreq = selectedKit === 'acoustic' ? 180 : 300;
+      endFreq = selectedKit === 'acoustic' ? 80 : 150;
+    } else { // low
+      startFreq = selectedKit === 'acoustic' ? 120 : 200;
+      endFreq = selectedKit === 'acoustic' ? 50 : 80;
+    }
 
+    osc.frequency.setValueAtTime(startFreq, time);
+    osc.frequency.exponentialRampToValueAtTime(endFreq, time + 0.25);
+    
     gain.gain.setValueAtTime(0.8, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
 
@@ -163,129 +218,179 @@ document.addEventListener('DOMContentLoaded', () => {
     osc.stop(time + 0.26);
   }
 
-  function playPluck(time) {
-    const osc = audioCtx.createOscillator();
-    const filter = audioCtx.createBiquadFilter();
+  function playCowbell(time) {
     const gain = audioCtx.createGain();
-
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(440, time); // A4 note
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(800, time);
-    filter.frequency.exponentialRampToValueAtTime(150, time + 0.1);
-
-    gain.gain.setValueAtTime(0.6, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-
-    osc.connect(filter);
-    filter.connect(gain);
     gain.connect(masterGain);
 
-    osc.start(time);
-    osc.stop(time + 0.13);
-  }
-
-  function playSub(time) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(masterGain);
-
-    osc.frequency.setValueAtTime(70, time);
-    osc.frequency.exponentialRampToValueAtTime(20, time + 0.35);
-
-    gain.gain.setValueAtTime(1.2, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
-
-    osc.start(time);
-    osc.stop(time + 0.36);
+    if (selectedKit === 'acoustic') {
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      osc1.frequency.setValueAtTime(800, time);
+      osc2.frequency.setValueAtTime(540, time);
+      
+      gain.gain.setValueAtTime(0.6, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+      
+      osc1.connect(gain);
+      osc2.connect(gain);
+      osc1.start(time);
+      osc2.start(time);
+      osc1.stop(time + 0.15);
+      osc2.stop(time + 0.15);
+    } else { // 808 Cowbell
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      osc1.type = 'square';
+      osc2.type = 'square';
+      osc1.frequency.setValueAtTime(540, time);
+      osc2.frequency.setValueAtTime(800, time);
+      
+      gain.gain.setValueAtTime(0.4, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+      
+      osc1.connect(gain);
+      osc2.connect(gain);
+      osc1.start(time);
+      osc2.start(time);
+      osc1.stop(time + 0.25);
+      osc2.stop(time + 0.25);
+    }
   }
 
   function playCrash(time) {
-    const bufferSize = audioCtx.sampleRate * 0.7;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
+    if (selectedKit === 'acoustic') {
+      const source = audioCtx.createBufferSource();
+      source.buffer = createNoiseBuffer(0.7);
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.value = 2500;
+      
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.4, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.7);
+      
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+      source.start(time);
+      source.stop(time + 0.75);
+    } else { // 808 Ride
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sawtooth';
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(3000, time);
+      
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.5, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.8);
+      
+      osc.frequency.setValueAtTime(1000, time);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+      osc.start(time);
+      osc.stop(time + 0.85);
     }
-
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'highpass';
-    filter.frequency.value = 2500;
-
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.4, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.6);
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGain);
-
-    source.start(time);
-    source.stop(time + 0.7);
   }
 
-  function triggerPad(sound) {
+  function triggerPad(padName) {
     initAudio();
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
     const now = audioCtx.currentTime;
-    switch(sound) {
+    switch(padName) {
       case 'kick': playKick(now); break;
       case 'snare': playSnare(now); break;
-      case 'hihat': playHiHat(now); break;
-      case 'clap': playClap(now); break;
-      case 'tom': playTom(now); break;
-      case 'pluck': playPluck(now); break;
-      case 'sub': playSub(now); break;
-      case 'noise': playCrash(now); break;
+      case 'closedhat': playClosedHat(now); break;
+      case 'openhat': playOpenHat(now); break;
+      case 'hightom': playTom(now, 'high'); break;
+      case 'lowtom': playTom(now, 'low'); break;
+      case 'cowbell': playCowbell(now); break;
+      case 'crash': playCrash(now); break;
     }
   }
 
-  // Trigger kinetic strike animation with immediate restart reflow
+  // Visual Recoil
   function animateStrike(el) {
     if (!el) return;
     el.classList.remove('active');
     void el.offsetWidth; // Force CSS repaint reflow
     el.classList.add('active');
+    setTimeout(() => {
+      el.classList.remove('active');
+    }, 100); // Quick reset for rapid consecutive hits
   }
 
-  // Connect clicks
+  // Unified Pointer Event Engine (Touch, Mouse, Pen)
+  let activePointers = new Set();
+  
   pads.forEach(pad => {
-    pad.addEventListener('click', (e) => {
+    const padName = pad.dataset.pad;
+
+    pad.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      const sound = pad.dataset.sound;
-      triggerPad(sound);
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      activePointers.add(e.pointerId);
+      triggerPad(padName);
       animateStrike(pad);
+      pad.setPointerCapture(e.pointerId);
     });
 
-    // Cleanup active class when kinetic animation runs to completion
-    pad.addEventListener('animationend', () => {
-      pad.classList.remove('active');
-    });
-  });
-
-  // Keyboard mapping (QWER and ASDF)
-  const keyMap = {
-    'q': 'kick', 'w': 'snare', 'e': 'hihat', 'r': 'clap',
-    'a': 'tom', 's': 'pluck', 'd': 'sub', 'f': 'noise'
-  };
-
-  window.addEventListener('keydown', (e) => {
-    const key = e.key.toLowerCase();
-    if (keyMap[key]) {
+    pad.addEventListener('pointerenter', (e) => {
       e.preventDefault();
-      const sound = keyMap[key];
-      const pad = document.querySelector(`.drum-item[data-sound="${sound}"]`);
-      if (pad) {
-        triggerPad(sound);
+      // Support glissando sliding across pads with mouse left button or touch pressed
+      if ((e.pointerType === 'mouse' && e.buttons === 1) || (e.pointerType === 'touch' && activePointers.has(e.pointerId))) {
+        triggerPad(padName);
         animateStrike(pad);
       }
+    });
+
+    pad.addEventListener('pointerup', (e) => {
+      e.preventDefault();
+      activePointers.delete(e.pointerId);
+      pad.releasePointerCapture(e.pointerId);
+    });
+
+    pad.addEventListener('pointercancel', (e) => {
+      e.preventDefault();
+      activePointers.delete(e.pointerId);
+      pad.releasePointerCapture(e.pointerId);
+    });
+    
+    pad.addEventListener('contextmenu', (e) => e.preventDefault());
+  });
+
+  // Keyboard mapping
+  const keyMap = {
+    'q': 'kick', 'w': 'snare', 'e': 'closedhat', 'r': 'openhat',
+    'a': 'hightom', 's': 'lowtom', 'd': 'cowbell', 'f': 'crash'
+  };
+
+  const activeKeys = new Set();
+
+  window.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
+    if (e.target.tagName === 'INPUT') return;
+    
+    const key = e.key.toLowerCase();
+    if (keyMap[key] && !activeKeys.has(key)) {
+      e.preventDefault();
+      activeKeys.add(key);
+      const padName = keyMap[key];
+      const pad = document.querySelector(`.pad[data-pad="${padName}"]`);
+      if (pad) {
+        triggerPad(padName);
+        animateStrike(pad);
+      }
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    const key = e.key.toLowerCase();
+    if (activeKeys.has(key)) {
+      activeKeys.delete(key);
     }
   });
 });

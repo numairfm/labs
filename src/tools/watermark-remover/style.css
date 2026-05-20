@@ -1,0 +1,137 @@
+.workspace-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.tools-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover:not(.disabled) {
+  background: var(--border-color);
+}
+
+.action-btn.primary {
+  background: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+}
+
+.action-btn.primary:hover:not(.disabled) {
+  opacity: 0.9;
+}
+
+.action-btn.outline {
+  background: transparent;
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.action-btn.outline:hover:not(.disabled) {
+  background: rgba(var(--accent-blue), 0.1);
+}
+
+.action-btn.text-danger {
+  background: transparent;
+  border: none;
+  color: var(--accent-red);
+}
+
+.action-btn.text-danger:hover:not(.disabled) {
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.action-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.setting-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+input[type="range"] {
+  accent-color: var(--accent-blue);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  border: 2px dashed var(--border-color);
+}
+
+.canvas-container.dragover {
+  border-color: var(--accent-blue);
+  background-color: rgba(0, 0, 255, 0.05);
+}
+
+.upload-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+.canvas-stack {
+  position: relative;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+
+#image-canvas, #mask-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
+}
+
+#image-canvas {
+  z-index: 1;
+}
+
+#mask-canvas {
+  z-index: 2;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Video Compressor",
+  "description": "Compress and scale videos entirely in your browser using canvas capture.",
+  "category": "Utilities",
+  "icon": "compress",
+  "tags": ["video", "compress", "offline", "utility"],
+  "author": "Numair",
+  "version": "1.0.0"
+}

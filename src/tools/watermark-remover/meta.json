@@ -1,0 +1,9 @@
+{
+  "name": "Watermark Remover",
+  "description": "Remove watermarks using local AI canvas inpainting.",
+  "category": "Utilities",
+  "icon": "eraser",
+  "tags": ["image", "AI", "canvas", "utility"],
+  "author": "Numair",
+  "version": "1.0.0"
+}
