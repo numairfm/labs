@@ -79,6 +79,10 @@
   box-shadow: var(--shadow-main);
   background-color: var(--bg-card);
   image-rendering: pixelated;
+  max-width: 100%;
+  max-height: 60vh;
+  height: auto;
+  aspect-ratio: 360 / 600;
 }
 
 /* ── Overlay ── */
@@ -142,3 +146,68 @@
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--border-color);
 }
+
+/* ── Touch Controls ── */
+.touch-controls {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+}
+
+.btn-touch {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 900;
+  padding: 1rem;
+  background-color: var(--bg-card);
+  border: 3px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 4px 4px 0 var(--border-color);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.05s ease;
+}
+
+.btn-touch:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--border-color);
+  background-color: var(--accent-blue);
+  color: white;
+}
+
+/* Position full split screen tap guides */
+.side-indicator-glow {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 25vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+.left-glow {
+  left: 0;
+  background: linear-gradient(to right, rgba(112, 224, 160, 0.15), rgba(112, 224, 160, 0));
+}
+.right-glow {
+  right: 0;
+  background: linear-gradient(to left, rgba(112, 224, 160, 0.15), rgba(112, 224, 160, 0));
+}
+.side-indicator-glow.active {
+  opacity: 1;
+}
+
+/* Remove old tiny button touchcontrols container from view completely */
+#touch-controls {
+  display: none !important;
+}
+
+

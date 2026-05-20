@@ -32,6 +32,9 @@
   </header>
 
   <main class="doodle-main">
+    <div id="left-tap-glow" class="side-indicator-glow left-glow"></div>
+    <div id="right-tap-glow" class="side-indicator-glow right-glow"></div>
+    
     <div class="score-bar">
       <span class="score-label">HEIGHT</span>
       <span id="score" class="score-val">0</span>
@@ -43,10 +46,15 @@
       <div id="overlay" class="overlay">
         <div class="overlay-inner">
           <h2>DOODLE JUMP</h2>
-          <p>← → or A D to move</p>
+          <p>← → / A D or tap buttons to move</p>
           <button id="start-btn">START</button>
         </div>
       </div>
+    </div>
+    
+    <div class="touch-controls" id="touch-controls" style="display: none;">
+      <button class="btn-touch" id="btn-left">◀ LEFT</button>
+      <button class="btn-touch" id="btn-right">RIGHT ▶</button>
     </div>
   </main>
 

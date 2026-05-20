@@ -101,6 +101,77 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keydown', e => { keys[e.key] = true; });
   window.addEventListener('keyup',   e => { keys[e.key] = false; });
 
+  const leftGlow = document.getElementById('left-tap-glow');
+  const rightGlow = document.getElementById('right-tap-glow');
+  
+  function handleScreenTouchStart(e) {
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    e.preventDefault();
+    
+    // Clear movement keys initially
+    keys['ArrowLeft'] = false;
+    keys['ArrowRight'] = false;
+    if (leftGlow) leftGlow.classList.remove('active');
+    if (rightGlow) rightGlow.classList.remove('active');
+
+    // Check multiple touches for simultaneous triggers
+    for (let i = 0; i < e.touches.length; i++) {
+      const touch = e.touches[i];
+      const screenWidth = window.innerWidth;
+      
+      if (touch.clientX < screenWidth / 2) {
+        keys['ArrowLeft'] = true;
+        if (leftGlow) leftGlow.classList.add('active');
+      } else {
+        keys['ArrowRight'] = true;
+        if (rightGlow) rightGlow.classList.add('active');
+      }
+    }
+  }
+  
+  function handleScreenTouchEnd(e) {
+    e.preventDefault();
+    keys['ArrowLeft'] = false;
+    keys['ArrowRight'] = false;
+    if (leftGlow) leftGlow.classList.remove('active');
+    if (rightGlow) rightGlow.classList.remove('active');
+    
+    for (let i = 0; i < e.touches.length; i++) {
+      const touch = e.touches[i];
+      if (touch.clientX < window.innerWidth / 2) {
+        keys['ArrowLeft'] = true;
+        if (leftGlow) leftGlow.classList.add('active');
+      } else {
+        keys['ArrowRight'] = true;
+        if (rightGlow) rightGlow.classList.add('active');
+      }
+    }
+  }
+  
+  window.addEventListener('touchstart', handleScreenTouchStart, { passive: false });
+  window.addEventListener('touchend', handleScreenTouchEnd, { passive: false });
+  window.addEventListener('touchcancel', handleScreenTouchEnd, { passive: false });
+
+  // Mouse emulation for desktop testing of split zones
+  window.addEventListener('mousedown', (e) => {
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    if (e.clientX < window.innerWidth / 2) {
+      keys['ArrowLeft'] = true;
+      if (leftGlow) leftGlow.classList.add('active');
+    } else {
+      keys['ArrowRight'] = true;
+      if (rightGlow) rightGlow.classList.add('active');
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    keys['ArrowLeft'] = false;
+    keys['ArrowRight'] = false;
+    if (leftGlow) leftGlow.classList.remove('active');
+    if (rightGlow) rightGlow.classList.remove('active');
+  });
+
+
   // ── Update ────────────────────────────────────────────
   function update() {
     // Horizontal movement
